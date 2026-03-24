@@ -91,11 +91,19 @@ steps:
       - "pr-${_PR_NUMBER}"
       - "--env-vars-file"
       - "conf/dev/.env"
+      - "--add-cloudsql-instances"
+      - "${_CLOUD_SQL_CONNECTION_NAME}"
+      - "--update-env-vars"
+      - "DB_USER=adk_user,DB_NAME=sessions,DB_CONNECTION_NAME=${_CLOUD_SQL_CONNECTION_NAME}"
+      - "--set-secrets"
+      - "DB_PASSWORD=${_DB_PASSWORD_SECRET_NAME}:latest"
 
 substitutions:
   _ARTIFACT_REGISTRY_REPO_NAME: randstad-adk-repo-dev
   _REGION: europe-west2
   _CONTAINER_NAME: randstad-adk
+  _CLOUD_SQL_CONNECTION_NAME: "your-project:europe-west2:your-instance-name" # Update this in Cloud Build trigger
+  _DB_PASSWORD_SECRET_NAME: "randstad-adk-db-password"
 
 logsBucket: gs://${PROJECT_ID}-randstad-adk-logs/build-logs
 options:

@@ -34,8 +34,20 @@ allow_origins = (
 logs_bucket_name = os.environ.get("LOGS_BUCKET_NAME")
 
 AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# In-memory session configuration - no persistent storage
-session_service_uri = None
+
+# Build Cloud SQL URL from environment variables for session storage
+# Uses the pg8000 driver and the Cloud Run unix socket
+db_user = os.environ.get("DB_USER")
+db_pass = os.environ.get("DB_PASSWORD")
+db_name = os.environ.get("DB_NAME")
+db_conn = os.environ.get("DB_CONNECTION_NAME")
+
+if all([db_user, db_pass, db_name, db_conn]):
+    # Note: asyncpg format for unix sockets is postgresql+asyncpg://user:password@/dbname?host=/cloudsql/connection_name
+    session_service_uri = f"postgresql+asyncpg://{db_user}:{db_pass}@/{db_name}?host=/cloudsql/{db_conn}"
+else:
+    # Fallback to local SQLite if running outside Cloud Run or missing env vars
+    session_service_uri = "sqlite+aiosqlite:///app/.adk/session.db"
 
 artifact_service_uri = f"gs://{logs_bucket_name}" if logs_bucket_name else None
 
