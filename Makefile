@@ -66,3 +66,31 @@ lint:
 	uv run ruff check . --diff
 	uv run ruff format . --check --diff
 	uv run ty check .
+
+# --- Commands from Agent Starter Pack ---
+
+backend: deploy
+
+deploy:
+	PROJECT_ID=$$(gcloud config get-value project) && \
+	gcloud beta run deploy randstad-adk \
+		--source . \
+		--memory "4Gi" \
+		--project $$PROJECT_ID \
+		--region "us-central1" \
+		--no-allow-unauthenticated \
+		--no-cpu-throttling \
+		--labels "created-by=adk" \
+		--update-build-env-vars "AGENT_VERSION=$(shell awk -F'"' '/^version = / {print $$2}' pyproject.toml || echo '0.0.0')" \
+		--update-env-vars \
+		"" \
+		$(if $(IAP),--iap) \
+		$(if $(PORT),--port=$(PORT))
+
+local-backend:
+	uv run uvicorn app.fast_api_app:app --host localhost --port $(or $(PORT),8000) --reload
+
+setup-dev-env:
+	PROJECT_ID=$$(gcloud config get-value project) && \
+	(cd deployment/terraform/dev && terraform init && terraform apply --var-file vars/env.tfvars --var dev_project_id=$$PROJECT_ID --auto-approve)
+
