@@ -1,78 +1,53 @@
-# randstad-adk
+# B2B Lead Qualifier Agent 📞
 
+Questo progetto implementa un **agente conversazionale vocale/testuale B2B** progettato per simulare una telefonata di qualificazione commerciale, avvalendosi di [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/). 
 
-Agent generated with [`googleCloudPlatform/agent-starter-pack`](https://github.com/GoogleCloudPlatform/agent-starter-pack) version `0.39.6`
+L'agente si occupa di qualificare lead di aziende (con focus sulla somministrazione del personale) guidando in modo naturale una conversazione per determinare il potenziale del cliente tramite un preciso albero decisionale.
 
-## Project Structure
+## 🎯 Obiettivo e Albero Decisionale
+L'agente identifica il potenziale del cliente seguendo tre livelli di priorità decrescente:
 
-```
-randstad-adk/
-├── app/         # Core agent code
-│   ├── agent.py               # Main agent logic
-│   └── app_utils/             # App utilities and helpers
-├── tests/                     # Unit, integration, and load tests
-├── GEMINI.md                  # AI-assisted development guide
-├── Makefile                   # Development commands
-└── pyproject.toml             # Project dependencies
-```
+1. **Presenza Competitor**: Il cliente si affida già a un'agenzia? Se sì, si richiede il **volume massimo attuale**.
+2. **Esperienza Passata**: Se attualmente non ha competitor, ha mai collaborato in passato con un'agenzia? Se sì, si richiede il **volume massimo storico**.
+3. **Proxy (Tempo Determinato)**: Se non ha mai usato agenzie, quanti **dipendenti a tempo determinato** ha attualmente? (Utilizzato per stimare un potenziale di conversione).
 
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+L'agente gestisce in modo proattivo **divagazioni e risposte vaghe**, richiedendo cordialmente una stima numerica. Una volta ottenuti i dati esatti (livello e volume), viene chiamato in automatico un **Tool Python** per il salvataggio dei dati.
 
-## Requirements
+## 🛠️ Tecnologie Utilizzate
+- **Google ADK** (Agent Development Kit) per la logica dell'agente.
+- **Python 3.11+** e il pacchetto `uv` per la gestione ottimizzata delle dipendenze.
+- **SQLite3** come database di appoggio (salvataggio locale).
+- **Pytest** per gli unit test.
 
-Before you begin, ensure you have:
-- **uv**: Python package manager (used for all dependency management in this project) - [Install](https://docs.astral.sh/uv/getting-started/installation/) ([add packages](https://docs.astral.sh/uv/concepts/dependencies/) with `uv add <package>`)
-- **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
-- **make**: Build automation tool - [Install](https://www.gnu.org/software/make/) (pre-installed on most Unix-based systems)
+## 📂 Struttura del Progetto
+- `app/agent.py`: Definizione principale dell'agente e import dei tool/prompt.
+- `app/prompts.py`: Il "System Prompt" (Instruction) contente l'albero decisionale, le istruzioni di comportamento (empatia, gestione vaghezza, divieti) e il ruolo.
+- `app/tools.py`: Contiene lo strumento `salva_qualificazione`, chiamato dall'agente per storicizzare la lead nel DB locale SQLite (`qualificazioni.db`).
+- `tests/unit/`: Test suite locale tramite `pytest` con mock del database.
 
+## 🚀 Come testarlo in locale
 
-## Quick Start
-
-Install required packages and launch the local development environment:
-
+### 1. Installazione
+Assicurati di aver configurato le credenziali per i servizi Google/Vertex AI e di avere `uv` installato:
 ```bash
-make install && make playground
+make install
 ```
 
-## Commands
-
-| Command              | Description                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------- |
-| `make install`       | Install dependencies using uv                                                               |
-| `make playground`    | Launch local development environment                                                        |
-| `make lint`          | Run code quality checks                                                                     |
-| `make test`          | Run unit and integration tests                                                              |
-
-For full command options and usage, refer to the [Makefile](Makefile).
-
-## 🛠️ Project Management
-
-| Command | What It Does |
-|---------|--------------|
-| `uvx agent-starter-pack enhance` | Add CI/CD pipelines and Terraform infrastructure |
-| `uvx agent-starter-pack setup-cicd` | One-command setup of entire CI/CD pipeline + infrastructure |
-| `uvx agent-starter-pack upgrade` | Auto-upgrade to latest version while preserving customizations |
-| `uvx agent-starter-pack extract` | Extract minimal, shareable version of your agent |
-
----
-
-## Development
-
-Edit your agent logic in `app/agent.py` and test with `make playground` - it auto-reloads on save.
-See the [development guide](https://googlecloudplatform.github.io/agent-starter-pack/guide/development-guide) for the full workflow.
-
-## Deployment
-
+### 2. Esecuzione tramite Playground
+L'ADK include una pratica interfaccia web. Avviala tramite il Makefile:
 ```bash
-gcloud config set project <your-project-id>
-make deploy
+make playground
+```
+Il server sarà disponibile (solitamente) all'indirizzo `http://localhost:8501`. Apri il browser, seleziona l'ambiente (es. "app") e inizia a interagire testualmente con l'agente.
+
+### 3. Verifica del salvataggio
+Alla fine della qualificazione, l'agente salverà automaticamente la conversione confermata in `qualificazioni.db`. Per visualizzare i lead:
+```bash
+sqlite3 qualificazioni.db "SELECT * FROM qualificazioni;"
 ```
 
-To add CI/CD and Terraform, run `uvx agent-starter-pack enhance`.
-To set up your production infrastructure, run `uvx agent-starter-pack setup-cicd`.
-See the [deployment guide](https://googlecloudplatform.github.io/agent-starter-pack/guide/deployment) for details.
-
-## Observability
-
-Built-in telemetry exports to Cloud Trace, BigQuery, and Cloud Logging.
-See the [observability guide](https://googlecloudplatform.github.io/agent-starter-pack/guide/observability) for queries and dashboards.
+### 4. Avviare i Test (Unit)
+La suite di test verifica che il Tool SQLite operi correttamente con mocking in-memory, isolandolo dal database principale.
+```bash
+uv run pytest tests/unit/test_tools.py -v
+```
