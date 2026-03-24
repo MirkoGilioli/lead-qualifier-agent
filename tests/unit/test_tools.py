@@ -1,53 +1,65 @@
-import sqlite3
 import pytest
+from unittest.mock import patch, MagicMock
 from app.tools import salva_qualificazione
-import app.tools
 
 @pytest.fixture
-def temp_db(tmp_path, monkeypatch):
+def mock_firestore_db():
     """
-    Fixture che crea un path temporaneo per il database SQLite 
-    e fa il mock della variabile DB_PATH nel modulo app.tools.
-    Restituisce il percorso del db temporaneo per fare le asserzioni.
+    Fixture che fa il mock del client Firestore e dei suoi metodi.
     """
-    db_file = tmp_path / "test_qualificazioni.db"
-    monkeypatch.setattr(app.tools, "DB_PATH", str(db_file))
-    return db_file
+    with patch('app.tools.db') as mock_db:
+        # Crea mock per le varie concatenazioni: db.collection().document().set()
+        mock_collection = MagicMock()
+        mock_document = MagicMock()
+        
+        mock_db.collection.return_value = mock_collection
+        mock_collection.document.return_value = mock_document
+        
+        yield mock_db, mock_collection, mock_document
 
-def test_salva_qualificazione_restituisce_stringa_corretta(temp_db):
+def test_salva_qualificazione_restituisce_stringa_corretta(mock_firestore_db):
     """
-    Verifica che il tool restituisca la stringa formattata correttamente.
+    Verifica che il tool restituisca la stringa formattata correttamente per Firestore.
     """
+    _, _, mock_document = mock_firestore_db
+    
+    # Simula un salvataggio con successo (set() non lancia eccezioni)
+    mock_document.set.return_value = None
+    
     risultato = salva_qualificazione("competitor", 50)
-    assert risultato == "Qualificazione salvata con successo: competitor con volume 50."
+    assert risultato == "Qualificazione salvata con successo su Firestore: competitor con volume 50."
 
-def test_salva_qualificazione_crea_tabella_e_inserisce_dati(temp_db):
+def test_salva_qualificazione_inserisce_dati_firestore(mock_firestore_db):
     """
-    Verifica che il tool crei la tabella se non esiste e inserisca i valori corretti.
+    Verifica che il tool chiami correttamente collection, document e set con i dati giusti.
     """
+    mock_db, mock_collection, mock_document = mock_firestore_db
+    
     salva_qualificazione("storico", 20)
     
-    # Controlliamo cosa è stato salvato nel DB temporaneo
-    with sqlite3.connect(str(temp_db)) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT tipo, volume FROM qualificazioni")
-        righe = cursor.fetchall()
-        
-        assert len(righe) == 1
-        assert righe[0] == ("storico", 20)
-
-def test_salva_qualificazione_inserisce_piu_righe(temp_db):
-    """
-    Verifica che chiamate multiple salvino i dati consecutivamente senza sovrascriverli.
-    """
-    salva_qualificazione("proxy", 10)
-    salva_qualificazione("competitor", 100)
+    # Controlliamo che sia stata chiamata la collection giusta
+    mock_db.collection.assert_called_once_with("qualificazioni")
     
-    with sqlite3.connect(str(temp_db)) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT tipo, volume FROM qualificazioni ORDER BY id")
-        righe = cursor.fetchall()
-        
-        assert len(righe) == 2
-        assert righe[0] == ("proxy", 10)
-        assert righe[1] == ("competitor", 100)
+    # Controlliamo che document() sia stato chiamato
+    mock_collection.document.assert_called_once()
+    
+    # Controlliamo che set sia stato chiamato con il dizionario corretto
+    args, kwargs = mock_document.set.call_args
+    assert len(args) == 1
+    
+    dati_salvati = args[0]
+    assert dati_salvati["tipo"] == "storico"
+    assert dati_salvati["volume"] == 20
+    assert "timestamp" in dati_salvati
+
+def test_salva_qualificazione_gestisce_errori(mock_firestore_db):
+    """
+    Verifica che il tool gestisca correttamente le eccezioni restituendo l'errore formattato.
+    """
+    _, _, mock_document = mock_firestore_db
+    
+    # Simula un errore durante il salvataggio
+    mock_document.set.side_effect = Exception("Permessi insufficienti")
+    
+    risultato = salva_qualificazione("proxy", 10)
+    assert "Errore durante il salvataggio su Firestore: Permessi insufficienti" in risultato
