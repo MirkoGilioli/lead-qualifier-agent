@@ -104,6 +104,8 @@ steps:
       - "conf/dev/.env"
       - "--add-cloudsql-instances"
       - "${_CLOUD_SQL_CONNECTION_NAME}"
+      - "--service-account"
+      - "randstad-adk-app@${PROJECT_ID}.iam.gserviceaccount.com"
       - "--set-secrets"
       - "DB_PASSWORD=${_DB_PASSWORD_SECRET_NAME}:latest"
 
