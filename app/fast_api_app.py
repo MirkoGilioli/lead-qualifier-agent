@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Questo modulo definisce l'applicazione FastAPI per servire l'agente ADK.
+Include il setup della telemetria, l'esposizione degli endpoint e il logging su Cloud Logging.
+"""
+
 import os
 
 import google.auth

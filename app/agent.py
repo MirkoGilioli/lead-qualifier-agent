@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Questo modulo definisce l'agente commerciale B2B utilizzando Google Agent Development Kit (ADK).
+Configura l'autenticazione GCP, le impostazioni del modello Vertex AI Gemini,
+i filtri di sicurezza e collega l'istruzione di base (prompts.py) con lo strumento di salvataggio su Firestore.
+"""
+
 import os
 import google.auth
 
@@ -24,12 +30,15 @@ from google.genai import types
 from .tools import salva_qualificazione
 from .prompts import INSTRUCTION
 
+# Recupera il project ID tramite le credenziali default di GCP e lo imposta nell'ambiente
 _, project_id = google.auth.default()
 os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
-# Impostiamo i filtri di sicurezza (Responsible AI)
+# Impostiamo i filtri di sicurezza (Responsible AI) per bloccare contenuti non sicuri.
+# Questo è fondamentale per garantire che l'agente commerciale rimanga sempre appropriato 
+# e focalizzato sul proprio obiettivo aziendale.
 safety_settings = [
     types.SafetySetting(
         category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
@@ -49,6 +58,9 @@ safety_settings = [
     ),
 ]
 
+# Definizione del Root Agent principale dell'applicazione (ADK)
+# Questo agente utilizza Gemini Flash con una temperatura bassa (0.2)
+# per garantire risposte il più deterministiche possibile in un contesto commerciale.
 root_agent = Agent(
     name="qualificatore_commerciale",
     model=Gemini(
@@ -60,9 +72,10 @@ root_agent = Agent(
         )
     ),
     instruction=INSTRUCTION,
-    tools=[salva_qualificazione],
+    tools=[salva_qualificazione], # Tool associato all'agente per storicizzare la qualificazione su Firestore
 )
 
+# Definizione e registrazione dell'App ADK
 app = App(
     root_agent=root_agent,
     name="app",
