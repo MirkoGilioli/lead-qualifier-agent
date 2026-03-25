@@ -89,7 +89,7 @@ steps:
       - "--allow-unauthenticated"
       - "--tag"
       - "pr-${_PR_NUMBER}"
-      - "env-vars-file"
+      - "--env-vars-file"
       - "conf/staging/.env"
 
 substitutions:
