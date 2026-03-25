@@ -5,7 +5,7 @@ L'agente è un assistente (progettato per interfacciarsi con un canale vocale) c
 1. Presenza Competitor (volume massimo attuale).
 2. Esperienza Passata (volume massimo storico).
 3. Proxy (numero di dipendenti a tempo determinato attuali).
-L'agente deve guidare la conversazione in modo naturale, gestendo divagazioni e risposte vaghe, per assicurarsi di ottenere i dati quantitativi necessari prima di chiudere la qualificazione. Le risposte estratte verranno salvate in un database locale SQLite.
+L'agente deve guidare la conversazione in modo naturale, gestendo divagazioni e risposte vaghe, per assicurarsi di ottenere i dati quantitativi necessari prima di chiudere la qualificazione. Le risposte estratte verranno salvate in un database documentale Google Cloud Firestore.
 
 ## Example Use Cases
 1. **Caso Diretto (Competitor Presente):**
@@ -31,7 +31,7 @@ L'agente deve guidare la conversazione in modo naturale, gestendo divagazioni e 
    - *Risultato:* Qualificazione salvata su DB (Proxy, 15).
 
 ## Tools Required
-- `salva_qualificazione`: Uno strumento (Tool) Python che l'agente dovrà obbligatoriamente chiamare una volta ottenute le risposte, per salvare strutturalmente il livello di priorità identificato (es. 'competitor', 'storico', 'proxy') e il relativo volume numerico all'interno di un database SQLite in locale.
+- `salva_qualificazione`: Uno strumento (Tool) Python che l'agente dovrà obbligatoriamente chiamare una volta ottenute le risposte, per salvare strutturalmente il livello di priorità identificato (es. 'competitor', 'storico', 'proxy') e il relativo volume numerico all'interno di Google Cloud Firestore.
 
 ## Constraints & Safety Rules
 - L'agente deve mantenere un tono professionale, empatico e discorsivo, adatto a una chiamata commerciale B2B.
@@ -41,5 +41,5 @@ L'agente deve guidare la conversazione in modo naturale, gestendo divagazioni e 
 
 ## Success Criteria
 - L'agente identifica correttamente la categoria di potenziale nell'80%+ dei casi di test.
-- L'agente chiama correttamente il tool `salva_qualificazione` estraendo il dato numerico corretto e lo persiste in SQLite.
+- L'agente chiama correttamente il tool `salva_qualificazione` estraendo il dato numerico corretto e lo persiste in Firestore.
 - L'agente recupera il controllo della conversazione se l'utente divaga.

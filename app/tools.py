@@ -12,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Questo modulo definisce gli strumenti (Tools) a disposizione dell'agente.
+Lo strumento principale è salva_qualificazione, il quale permette all'agente di storicizzare
+i risultati della lead qualification all'interno di un database Firestore.
+"""
+
 import datetime
 from google.cloud import firestore
 
-# Initialize Firestore client using the specific database created
-# Database name: lead-qualifier-agent-db
+# Inizializza il client Firestore utilizzando lo specifico database creato per il progetto
+# Nome database: lead-qualifier-agent-db (creato tramite l'infrastruttura Terraform)
 db = firestore.Client(database="lead-qualifier-agent-db")
 
 def salva_qualificazione(tipo: str, volume: int) -> str:
@@ -33,17 +39,17 @@ def salva_qualificazione(tipo: str, volume: int) -> str:
         Stringa di conferma dell'avvenuto salvataggio.
     """
     try:
-        # Create a reference to the 'qualificazioni' collection
+        # Crea un riferimento alla collection 'qualificazioni'
         doc_ref = db.collection("qualificazioni").document()
         
-        # Data to be saved
+        # Dati da salvare
         data = {
             "tipo": tipo,
             "volume": volume,
             "timestamp": datetime.datetime.now(tz=datetime.timezone.utc)
         }
         
-        # Save the data to Firestore
+        # Salva i dati su Firestore
         doc_ref.set(data)
         
         return f"Qualificazione salvata con successo su Firestore: {tipo} con volume {volume}."
