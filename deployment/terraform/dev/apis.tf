@@ -24,6 +24,8 @@ locals {
     "logging.googleapis.com",
     "cloudtrace.googleapis.com",
     "telemetry.googleapis.com",
+    "sqladmin.googleapis.com",
+    "secretmanager.googleapis.com",
   ]
 }
 

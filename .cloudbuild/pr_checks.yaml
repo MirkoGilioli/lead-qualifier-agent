@@ -72,6 +72,17 @@ steps:
         "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REGISTRY_REPO_NAME/$_CONTAINER_NAME-dev:$COMMIT_SHA",
       ]
 
+  # Prepare environment variables file
+  - name: "ubuntu"
+    id: prepare-env-file
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        echo "DB_USER=adk_user" >> conf/dev/.env
+        echo "DB_NAME=sessions" >> conf/dev/.env
+        echo "DB_CONNECTION_NAME=${_CLOUD_SQL_CONNECTION_NAME}" >> conf/dev/.env
+
   # Deploy to DEV on Cloud Run (Same GCP Project)
   - name: "gcr.io/cloud-builders/gcloud"
     id: deploy-dev
@@ -91,11 +102,19 @@ steps:
       - "pr-${_PR_NUMBER}"
       - "--env-vars-file"
       - "conf/dev/.env"
+      - "--add-cloudsql-instances"
+      - "${_CLOUD_SQL_CONNECTION_NAME}"
+      - "--service-account"
+      - "randstad-adk-app@${PROJECT_ID}.iam.gserviceaccount.com"
+      - "--set-secrets"
+      - "DB_PASSWORD=${_DB_PASSWORD_SECRET_NAME}:latest"
 
 substitutions:
   _ARTIFACT_REGISTRY_REPO_NAME: randstad-adk-repo-dev
   _REGION: europe-west2
   _CONTAINER_NAME: randstad-adk
+  _CLOUD_SQL_CONNECTION_NAME: "dt-mirko-sandbox-dev:europe-west2:randstad-adk-session-db-282a4166" # Update this in Cloud Build trigger
+  _DB_PASSWORD_SECRET_NAME: "randstad-adk-db-password"
 
 logsBucket: gs://${PROJECT_ID}-randstad-adk-logs/build-logs
 options:
