@@ -49,6 +49,8 @@ locals {
     "roles/iam.serviceAccountUser",
     "roles/logging.logWriter",
     "roles/storage.objectViewer",
+    "roles/serviceusage.serviceUsageConsumer",
+    "roles/cloudresourcemanager.projectIamAdmin",
   ]
 }
 
