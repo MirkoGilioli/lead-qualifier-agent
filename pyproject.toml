@@ -34,6 +34,9 @@ lint = [
     "ty>=0.0.1a0",
     "codespell>=2.2.0,<3.0.0",
 ]
+load-test = [
+    "locust>=2.31.1",
+]
 
 [tool.ruff]
 line-length = 88

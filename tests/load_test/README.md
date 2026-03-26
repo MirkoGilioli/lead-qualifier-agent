@@ -2,9 +2,35 @@
 
 This directory provides a comprehensive load testing framework for your Generative AI application, leveraging the power of [Locust](http://locust.io), a leading open-source load testing tool.
 
-## Local Load Testing
+## Using the Makefile (Recommended)
 
-Follow these steps to execute load tests on your local machine:
+The easiest way to run load tests is using the provided `Makefile` targets. This handles dependencies, environment discovery, and authentication automatically.
+
+### Local Load Testing
+
+```bash
+make load-test ENV=dev
+```
+*Note: This will target your local environment if the Cloud Run service is not found, or you can specify USERS, RATE, and DURATION.*
+
+### Remote Load Testing (Staging/Prod)
+
+```bash
+make load-test ENV=staging USERS=50 RATE=5 DURATION=1m
+```
+
+This command will:
+1. Sync dependencies (including `locust`).
+2. Discover the Cloud Run service URL for the specified environment.
+3. Obtain a fresh identity token for authentication.
+4. Execute Locust in headless mode.
+5. Generate reports in `tests/load_test/.results/`.
+
+## Manual Execution (Advanced)
+
+If you prefer manual control, follow these steps:
+
+### Local Load Testing
 
 **1. Start the FastAPI Server:**
 
@@ -14,18 +40,10 @@ Launch the FastAPI server in a separate terminal:
 uv run uvicorn app.fast_api_app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-**2. (In another tab) Create virtual environment with Locust**
-Using another terminal tab, This is suggested to avoid conflicts with the existing application python environment.
+**2. Execute the Load Test:**
 
 ```bash
-python3 -m venv .locust_env && source .locust_env/bin/activate && pip install locust==2.31.1
-```
-
-**3. Execute the Load Test:**
-Trigger the Locust load test with the following command:
-
-```bash
-locust -f tests/load_test/load_test.py \
+uv run locust -f tests/load_test/load_test.py \
 -H http://127.0.0.1:8000 \
 --headless \
 -t 30s -u 10 -r 2 \
@@ -33,51 +51,31 @@ locust -f tests/load_test/load_test.py \
 --html=tests/load_test/.results/report.html
 ```
 
-This command initiates a 30-second load test, simulating 2 users spawning per second, reaching a maximum of 60 concurrent users.
-
-**Results:**
-
-Comprehensive CSV and HTML reports detailing the load test performance will be generated and saved in the `tests/load_test/.results` directory.
-
-## Remote Load Testing (Targeting Cloud Run)
-
-This framework also supports load testing against remote targets, such as a staging Cloud Run instance. This process is seamlessly integrated into the Continuous Delivery (CD) pipeline.
-
-**Prerequisites:**
-
-- **Dependencies:** Ensure your environment has the same dependencies required for local testing.
-- **Cloud Run Invoker Role:** You'll need the `roles/run.invoker` role to invoke the Cloud Run service.
-
-**Steps:**
+### Remote Load Testing (Targeting Cloud Run)
 
 **1. Obtain Cloud Run Service URL:**
 
-Navigate to the Cloud Run console, select your service, and copy the URL displayed at the top. Set this URL as an environment variable:
-
 ```bash
-export RUN_SERVICE_URL=https://your-cloud-run-service-url.run.app
+export RUN_SERVICE_URL=$(gcloud run services describe <service-name> --format='value(status.url)')
 ```
 
 **2. Obtain ID Token:**
-
-Retrieve the ID token required for authentication:
 
 ```bash
 export _ID_TOKEN=$(gcloud auth print-identity-token -q)
 ```
 
 **3. Execute the Load Test:**
-Create virtual environment with Locust:
-```bash
-python3 -m venv .locust_env && source .locust_env/bin/activate && pip install locust==2.31.1
-```
 
-Execute load tests. The following command executes the same load test parameters as the local test but targets your remote Cloud Run instance.
 ```bash
-locust -f tests/load_test/load_test.py \
+_ID_TOKEN=$_ID_TOKEN uv run locust -f tests/load_test/load_test.py \
 -H $RUN_SERVICE_URL \
 --headless \
 -t 30s -u 60 -r 2 \
 --csv=tests/load_test/.results/results \
 --html=tests/load_test/.results/report.html
 ```
+
+## Results
+
+Comprehensive CSV and HTML reports detailing the load test performance will be generated and saved in the `tests/load_test/.results` directory.

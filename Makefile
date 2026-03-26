@@ -132,3 +132,29 @@ setup-dev-env:
 	$(MAKE) tf-init ENV=dev
 	$(MAKE) tf-apply ENV=dev
 
+# ==============================================================================
+# Load Testing (Locust)
+# ==============================================================================
+
+# Run load tests using Locust
+# Usage (Headless): make load-test [ENV=dev|staging|prod] [USERS=10] [RATE=2] DURATION=30s [SKIP_VERIFY=true]
+# Usage (Web UI):  make load-test [ENV=dev|staging|prod] [SKIP_VERIFY=true]
+load-test:
+	@echo "==============================================================================="
+	@echo "| Running Load Test (Locust) against: $(ENV)                                  |"
+	@echo "==============================================================================="
+	uv sync --extra load-test
+	$(eval CURRENT_PROJECT_ID := $(shell grep 'project_id' $(TF_DIR)/$(TF_VARS) | awk -F'=' '{print $$2}' | tr -d ' "'))
+	$(eval CURRENT_PROJECT_NAME := $(shell grep 'project_name' $(TF_DIR)/$(TF_VARS) | awk -F'=' '{print $$2}' | tr -d ' "'))
+	$(eval CURRENT_REGION := $(shell grep 'region' $(TF_DIR)/$(TF_VARS) | awk -F'=' '{print $$2}' | tr -d ' "'))
+	$(eval SERVICE_URL := $(shell gcloud run services describe $(CURRENT_PROJECT_NAME)-$(ENV) --project $(CURRENT_PROJECT_ID) --region $(CURRENT_REGION) --format='value(status.url)' 2>/dev/null || echo "http://localhost:8000"))
+	@echo "Targeting URL: $(SERVICE_URL)"
+	$(if $(filter-out http://localhost:8000,$(SERVICE_URL)), \
+		$(eval ID_TOKEN := $(shell gcloud auth print-identity-token -q)), \
+		$(eval ID_TOKEN := ""))
+	_ID_TOKEN=$(ID_TOKEN) LOCUST_SKIP_CERT_VERIFY=$(or $(SKIP_VERIFY),false) uv run locust -f tests/load_test/load_test.py \
+		-H $(SERVICE_URL) \
+		$(if $(DURATION),--headless -u $(or $(USERS),10) -r $(or $(RATE),2) -t $(DURATION),) \
+		--csv=tests/load_test/.results/results \
+		--html=tests/load_test/.results/report.html
+
