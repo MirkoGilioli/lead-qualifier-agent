@@ -13,52 +13,97 @@
 # limitations under the License.
 
 steps:
-  # Build Docker Image for PRODUCTION (Active on Release Tag v*)
+  # 1) Install uv package manager and sync dependencies
+  - name: "python:3.12-slim"
+    id: install-dependencies
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        pip install uv==0.8.13 --user && uv sync --locked
+    env:
+      - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
+
+  # 2) Run unit tests using pytest
+  - name: "python:3.12-slim"
+    id: unit-tests
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        uv run pytest tests/unit -v
+    env:
+      - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
+
+  # 3) Run integration tests (using STAGING DB for safety before prod deploy)
+  - name: "python:3.12-slim"
+    id: integration-tests
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+        export GOOGLE_CLOUD_LOCATION=global
+        export FIRESTORE_DATABASE_ID=lead-qualifier-db-staging
+        uv run pytest tests/integration -v
+    env:
+      - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
+
+  # 4) Run evaluation tests (ADK eval)
+  - name: "python:3.12-slim"
+    id: eval-tests
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+        export GOOGLE_CLOUD_LOCATION=global
+        export GOOGLE_GENAI_USE_VERTEXAI=True
+        # Limita la concorrenza a 1 per evitare errori 429 RESOURCE_EXHAUSTED
+        export ADK_EVAL_MAX_CONCURRENCY=1
+        uv sync --dev --extra eval
+        uv run adk eval ./app tests/eval/evalsets/lead_qualifier.evalset.json --config_file_path=tests/eval/eval_config.json
+    env:
+      - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
+
+  # 5) Build Docker Image for PRODUCTION (Active on Release Tag v*)
   - name: "gcr.io/cloud-builders/docker"
     id: build-image
     args:
-      [
-        "build",
-        "-t",
-        "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REGISTRY_REPO_NAME/$_CONTAINER_NAME:$TAG_NAME",
-        "--build-arg",
-        "COMMIT_SHA=$COMMIT_SHA",
-        ".",
-      ]
-      
-  # Push Docker Image to Artifact Registry (PRODUCTION)
+      - "build"
+      - "-t"
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME-prod:$TAG_NAME"
+      - "."
+
+  # 6) Push Docker Image to Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     id: push-image
     args:
-      [
-        "push",
-        "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REGISTRY_REPO_NAME/$_CONTAINER_NAME:$TAG_NAME",
-      ]
+      - "push"
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME-prod:$TAG_NAME"
 
-  # Deploy to PROD on Cloud Run
+  # 7) Deploy to PRODUCTION on Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
     id: deploy-prod
-    entrypoint: gcloud
+    entrypoint: /bin/bash
     args:
-      - "run"
-      - "deploy"
-      - "randstad-adk-prod"
-      - "--image"
-      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REGISTRY_REPO_NAME/$_CONTAINER_NAME:$TAG_NAME"
-      - "--region"
-      - "${_REGION}"
-      - "--project"
-      - "${PROJECT_ID}"
-      - "--allow-unauthenticated"
-      - "--env-vars-file"
-      - "conf/prod/.env"
+      - "-c"
+      - |
+        gcloud beta run deploy $_SERVICE_NAME-prod \
+          --image $_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME-prod:$TAG_NAME \
+          --region $_REGION \
+          --project $PROJECT_ID \
+          --no-allow-unauthenticated \
+          --service-account "$_SERVICE_NAME-app-prod@$PROJECT_ID.iam.gserviceaccount.com" \
+          --max-instances 10 \
+          --min-instances 1 \
+          --update-env-vars "FIRESTORE_DATABASE_ID=lead-qualifier-db-prod,LOGS_BUCKET_NAME=$PROJECT_ID-$_SERVICE_NAME-prod-logs,OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT"
 
 substitutions:
-  _ARTIFACT_REGISTRY_REPO_NAME: randstad-adk-repo-prod
-  _REGION: europe-west2
-  _CONTAINER_NAME: randstad-adk
+  _REPO_NAME: randstad-adk-repo-prod
+  _REGION: us-central1
+  _SERVICE_NAME: randstad-adk
 
-logsBucket: gs://${PROJECT_ID}-randstad-adk-logs/build-logs
 options:
   substitutionOption: ALLOW_LOOSE
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  logging: CLOUD_LOGGING_ONLY
