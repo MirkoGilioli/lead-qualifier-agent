@@ -35,7 +35,7 @@ steps:
     env:
       - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
 
-  # 3) Fa il build dell'immagine
+  # 3) Build the docker image
   - name: "gcr.io/cloud-builders/docker"
     id: build-image
     args:
