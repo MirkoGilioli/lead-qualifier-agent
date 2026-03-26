@@ -87,10 +87,10 @@ steps:
     args:
       - "-c"
       - |
-        SERVICE_URL=$(gcloud run services describe $_SERVICE_NAME-dev --platform managed --region $_REGION --format 'value(status.url)')
-        echo "Verifying service at $SERVICE_URL"
+        SERVICE_URL=$$(gcloud run services describe $_SERVICE_NAME-dev --platform managed --region $_REGION --format 'value(status.url)')
+        echo "Verifying service at $$SERVICE_URL"
         # Usiamo l'ID Token per l'autenticazione visto che il servizio non è pubblico
-        curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $(gcloud auth print-identity-token)" $SERVICE_URL/health | grep 200
+        curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $$(gcloud auth print-identity-token)" $$SERVICE_URL/health | grep 200
 
 substitutions:
   _REPO_NAME: randstad-adk-repo-dev
