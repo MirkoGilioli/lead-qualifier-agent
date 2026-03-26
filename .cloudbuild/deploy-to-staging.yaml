@@ -52,15 +52,18 @@ steps:
   # 4) Run evaluation tests (ADK eval)
   - name: "python:3.12-slim"
     id: eval-tests
-    entrypoint: /bin/bash
+    entrypoint: /bin/sh
     args:
       - "-c"
       - |
         export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
         export GOOGLE_CLOUD_LOCATION=global
         export GOOGLE_GENAI_USE_VERTEXAI=True
+        # Limita la concorrenza a 1 per evitare errori 429 RESOURCE_EXHAUSTED
+        export ADK_EVAL_MAX_CONCURRENCY=1
         uv sync --dev --extra eval
         uv run adk eval ./app tests/eval/evalsets/lead_qualifier.evalset.json --config_file_path=tests/eval/eval_config.json
+
     env:
       - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
 
