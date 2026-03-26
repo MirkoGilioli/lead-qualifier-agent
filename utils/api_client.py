@@ -21,14 +21,16 @@ class RandstadApiClient:
     Client sincrono per interagire con l'API dell'Agente Randstad.
     """
 
-    def __init__(self, base_url: str = "http://127.0.0.1:8000"):
+    def __init__(self, base_url: str = "http://127.0.0.1:8000", token: Optional[str] = None):
         self.base_url = base_url.rstrip("/")
         self.headers = {"Content-Type": "application/json"}
+        if token:
+            self.headers["Authorization"] = f"Bearer {token}"
 
     def health_check(self) -> bool:
         """Verifica se il server è attivo tramite l'endpoint /health."""
         try:
-            response = requests.get(f"{self.base_url}/health", timeout=5)
+            response = requests.get(f"{self.base_url}/health", headers=self.headers, timeout=5)
             return response.status_code == 200 and response.json().get("status") == "ok"
         except Exception:
             return False
