@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "cloud_run_service_url" {
-  description = "Cloud Run service URL"
-  value       = google_cloud_run_v2_service.app.uri
-}
+resource "google_firestore_database" "database" {
+  project     = var.project_id
+  name        = "lead-qualifier-db-${var.env}"
+  location_id = var.region
+  type        = "FIRESTORE_NATIVE"
 
-output "cloud_run_service_name" {
-  description = "Cloud Run service name"
-  value       = google_cloud_run_v2_service.app.name
+  depends_on = [google_project_service.services]
 }
