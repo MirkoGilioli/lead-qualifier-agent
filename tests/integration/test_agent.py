@@ -55,3 +55,43 @@ def test_agent_stream() -> None:
             has_text_content = True
             break
     assert has_text_content, "Expected at least one message with text content"
+
+
+def test_agent_lead_qualification() -> None:
+    """
+    Integration test for the lead qualification logic.
+    Tests that the agent correctly identifies qualification data and triggers the tool.
+    """
+    session_service = InMemorySessionService()
+    session = session_service.create_session_sync(user_id="test_user_qual", app_name="test")
+    runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
+
+    # Forniamo dati chiari per innescare la qualificazione
+    message = types.Content(
+        role="user", parts=[types.Part.from_text(text="Attualmente lavoriamo con un competitor e abbiamo 150 lavoratori somministrati.")]
+    )
+
+    events = list(
+        runner.run(
+            new_message=message,
+            user_id="test_user_qual",
+            session_id=session.id,
+            run_config=RunConfig(streaming_mode=StreamingMode.SSE),
+        )
+    )
+
+    # Verifichiamo se c'è stata una chiamata a funzione o una conferma testuale
+    # Quando l'agente chiama un tool, ADK genera una sequenza di eventi.
+    has_tool_call = any(
+        part.function_call is not None 
+        for event in events if event.content and event.content.parts 
+        for part in event.content.parts
+    )
+    
+    saved_confirmation = any(
+        "Qualificazione salvata con successo" in part.text 
+        for event in events if event.content and event.content.parts 
+        for part in event.content.parts if part.text
+    )
+    
+    assert has_tool_call or saved_confirmation, "Agent did not trigger the qualification tool or confirm saving."
