@@ -14,27 +14,56 @@
 
 import sys
 import os
+import subprocess
 
 # Aggiunge la radice del progetto al path per permettere l'importazione dei moduli
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.api_client import RandstadApiClient
 
+def get_gcloud_output(command: list) -> str:
+    """Esegue un comando gcloud e restituisce l'output pulito."""
+    try:
+        return subprocess.check_output(command).decode("utf-8").strip()
+    except subprocess.CalledProcessError as e:
+        print(f"Errore durante l'esecuzione di gcloud: {e}")
+        sys.exit(1)
+
 def main():
     """
-    Script di esempio per testare le API dell'agente Randstad.
-    Dimostra il flusso: Health Check -> Creazione Sessione -> Chat Streaming -> Feedback.
+    Script per testare l'agente Randstad deployato su Cloud Run.
+    Recupera automaticamente URL e ID Token tramite gcloud.
     """
-    client = RandstadApiClient()
+    # Parametri di configurazione (modifica se necessario)
+    service_name = "randstad-adk-dev"
+    region = "us-central1"
+    
+    print(f"--- 0. Fetching Cloud Run details for {service_name} ---")
+    
+    # 1. Recupera l'URL del servizio
+    print("Fetching Service URL...")
+    url = get_gcloud_output([
+        "gcloud", "run", "services", "describe", service_name, 
+        "--platform", "managed", "--region", region, "--format", "value(status.url)"
+    ])
+    print(f"✅ Service URL: {url}")
 
-    print("--- 1. Health Check ---")
+    # 2. Genera un ID Token per l'autenticazione
+    print("Generating ID Token...")
+    token = get_gcloud_output(["gcloud", "auth", "print-identity-token"])
+    print("✅ ID Token generated")
+
+    # 3. Inizializza il client con il token
+    client = RandstadApiClient(base_url=url, token=token)
+
+    print("\n--- 1. Health Check ---")
     if client.health_check():
-        print("✅ API is healthy")
+        print("✅ Cloud Run API is healthy")
     else:
-        print("❌ API is not reachable. Is the server running? (Try 'make local-backend')")
+        print("❌ Cloud Run API is not reachable.")
         return
 
-    user_id = "test_user_fix"
+    user_id = "cloud_run_tester"
     print(f"\n--- 2. Creating Session for {user_id} ---")
     try:
         session_id = client.create_session(user_id)
@@ -43,14 +72,12 @@ def main():
         print(f"❌ Failed to create session: {e}")
         return
 
-    # Esempio di frase che innesca la qualificazione lead su Firestore
-    message = "Ciao! Al momento lavoriamo con un competitor e abbiamo circa 50 lavoratori."
+    message = "Buongiorno, lavoro con Manpower e abbiamo 25 lavoratori somministrati."
     print(f"\n--- 3. Sending Message: '{message}' ---")
     print("Response: ", end="", flush=True)
     
     try:
         for event in client.chat_stream(user_id, session_id, message):
-            # In ADK, il contenuto testuale è sotto 'content' -> 'parts'
             content = event.get("content")
             if content and content.get("parts"):
                 for part in content["parts"]:
@@ -60,7 +87,7 @@ def main():
         print(f"\n❌ Error during streaming: {e}")
     
     print("\n\n--- 4. Sending Feedback ---")
-    if client.send_feedback(user_id, session_id, 5, "L'agente ha riconosciuto correttamente il competitor!"):
+    if client.send_feedback(user_id, session_id, 5, "Test su Cloud Run completato con successo!"):
         print("✅ Feedback sent successfully")
     else:
         print("❌ Failed to send feedback")

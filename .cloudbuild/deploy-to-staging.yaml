@@ -52,7 +52,7 @@ steps:
   # 4) Run evaluation tests (ADK eval)
   - name: "python:3.12-slim"
     id: eval-tests
-    entrypoint: /bin/sh
+    entrypoint: /bin/bash
     args:
       - "-c"
       - |
