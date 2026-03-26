@@ -51,6 +51,7 @@ locals {
     "roles/storage.objectViewer",
     "roles/serviceusage.serviceUsageConsumer",
     "roles/resourcemanager.projectIamAdmin",
+    "roles/aiplatform.user",
   ]
 }
 
