@@ -15,10 +15,7 @@
 terraform {
   required_version = ">= 1.5.0"
 
-  backend "gcs" {
-    bucket = "dt-mirko-sandbox-dev-tfstate"
-    prefix = "terraform/state/staging"
-  }
+  backend "gcs" {}
 
   required_providers {
     google = {

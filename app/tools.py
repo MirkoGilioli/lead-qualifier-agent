@@ -19,11 +19,13 @@ i risultati della lead qualification all'interno di un database Firestore.
 """
 
 import datetime
+import os
 from google.cloud import firestore
 
-# Inizializza il client Firestore utilizzando lo specifico database creato per il progetto
-# Nome database: lead-qualifier-agent-db (creato tramite l'infrastruttura Terraform)
-db = firestore.Client(database="lead-qualifier-agent-db")
+# Inizializza il client Firestore utilizzando il database specificato dall'ambiente (gestito da Terraform)
+# Fallback per compatibilità locale se la variabile non è impostata
+DATABASE_ID = os.getenv("FIRESTORE_DATABASE_ID", "lead-qualifier-db-dev")
+db = firestore.Client(database=DATABASE_ID)
 
 def salva_qualificazione(tipo: str, volume: int) -> str:
     """

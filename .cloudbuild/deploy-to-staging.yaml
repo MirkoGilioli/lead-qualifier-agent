@@ -45,7 +45,6 @@ steps:
         export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
         export GOOGLE_CLOUD_LOCATION=global
         export FIRESTORE_DATABASE_ID=lead-qualifier-db-staging
-
         uv run pytest tests/integration -v
     env:
       - 'PATH=/usr/local/bin:/usr/bin:~/.local/bin'
@@ -53,7 +52,7 @@ steps:
   # 4) Run evaluation tests (ADK eval)
   - name: "python:3.12-slim"
     id: eval-tests
-    entrypoint: /bin/bash
+    entrypoint: /bin/sh
     args:
       - "-c"
       - |

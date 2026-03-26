@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "cloud_run_service_url" {
-  description = "Cloud Run service URL"
-  value       = google_cloud_run_v2_service.app.uri
+output "app_service_account_email" {
+  description = "Application service account email"
+  value       = google_service_account.app_sa.email
 }
 
-output "cloud_run_service_name" {
-  description = "Cloud Run service name"
-  value       = google_cloud_run_v2_service.app.name
+output "cloudbuild_service_account_email" {
+  description = "Cloud Build service account email"
+  value       = google_service_account.cloudbuild_sa.email
+}
+
+output "logs_bucket_name" {
+  description = "Logs storage bucket name"
+  value       = google_storage_bucket.logs_data_bucket.name
 }

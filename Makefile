@@ -67,30 +67,68 @@ lint:
 	uv run ruff format . --check --diff
 	uv run ty check .
 
+# ==============================================================================
+# Infrastructure (Terraform)
+# ==============================================================================
+
+# Define environment (default: dev)
+ENV ?= dev
+TF_DIR = deployment/terraform
+TF_VARS = vars/$(ENV).tfvars
+PROJECT_ID ?= $(shell gcloud config get-value project)
+TF_BUCKET ?= $(PROJECT_ID)-tfstate
+
+# Initialize Terraform for a specific environment
+tf-init:
+	@echo "Initializing Terraform for environment: $(ENV)"
+	@cd $(TF_DIR) && terraform init \
+		-backend-config="bucket=$(TF_BUCKET)" \
+		-backend-config="prefix=terraform/state/$(ENV)" \
+		-reconfigure
+
+# Plan Terraform changes
+tf-plan:
+	@cd $(TF_DIR) && terraform plan -var-file=$(TF_VARS) -var="project_id=$(PROJECT_ID)"
+
+# Apply Terraform changes
+tf-apply:
+	@cd $(TF_DIR) && terraform apply -var-file=$(TF_VARS) -var="project_id=$(PROJECT_ID)" -auto-approve
+
+# Destroy Terraform infrastructure
+tf-destroy:
+	@cd $(TF_DIR) && terraform destroy -var-file=$(TF_VARS) -var="project_id=$(PROJECT_ID)" -auto-approve
+
 # --- Commands from Agent Starter Pack ---
 
 backend: deploy
 
 deploy:
-	PROJECT_ID=$$(gcloud config get-value project) && \
-	gcloud beta run deploy randstad-adk \
+	@echo "Deploying to environment: $(ENV)"
+	$(eval PROJECT_NAME := $(shell grep 'project_name' $(TF_DIR)/$(TF_VARS) | cut -d'"' -f2))
+	$(eval REGION := $(shell grep 'region' $(TF_DIR)/$(TF_VARS) | cut -d'"' -f2))
+	gcloud beta run deploy $(PROJECT_NAME)-$(ENV) \
 		--source . \
 		--memory "4Gi" \
-		--project $$PROJECT_ID \
-		--region "us-central1" \
+		--project $(PROJECT_ID) \
+		--region "$(REGION)" \
 		--no-allow-unauthenticated \
 		--no-cpu-throttling \
 		--labels "created-by=adk" \
+		--service-account "$(PROJECT_NAME)-app-$(ENV)@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--max-instances 10 \
+		--min-instances 1 \
+		--session-affinity \
 		--update-build-env-vars "AGENT_VERSION=$(shell awk -F'"' '/^version = / {print $$2}' pyproject.toml || echo '0.0.0')" \
 		--update-env-vars \
-		"" \
+		"FIRESTORE_DATABASE_ID=lead-qualifier-db-$(ENV),LOGS_BUCKET_NAME=$(PROJECT_ID)-$(PROJECT_NAME)-$(ENV)-logs,OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT" \
 		$(if $(IAP),--iap) \
 		$(if $(PORT),--port=$(PORT))
 
 local-backend:
 	uv run uvicorn app.fast_api_app:app --host localhost --port $(or $(PORT),8000) --reload
 
+# Legacy target, calling the new generic one
 setup-dev-env:
-	PROJECT_ID=$$(gcloud config get-value project) && \
-	(cd deployment/terraform/dev && terraform init && terraform apply --var-file vars/env.tfvars --var dev_project_id=$$PROJECT_ID --auto-approve)
+	$(MAKE) tf-init ENV=dev
+	$(MAKE) tf-apply ENV=dev
 

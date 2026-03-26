@@ -1,0 +1,2038 @@
+{
+  "eval_set_result_id": "app_lead_qualifier_1774449657.090373",
+  "eval_set_result_name": "app_lead_qualifier_1774449657.090373",
+  "eval_set_id": "lead_qualifier",
+  "eval_case_results": [
+    {
+      "eval_set_file": "lead_qualifier",
+      "eval_set_id": "lead_qualifier",
+      "eval_id": "case_3_proxy_and_vague_answers",
+      "final_eval_status": 1,
+      "eval_metric_results": null,
+      "overall_eval_metric_results": [
+        {
+          "metric_name": "tool_trajectory_avg_score",
+          "threshold": 1.0,
+          "criterion": {
+            "threshold": 1.0,
+            "match_type": "EXACT"
+          },
+          "custom_function_path": null,
+          "score": 1.0,
+          "eval_status": 1,
+          "details": {
+            "rubric_scores": null
+          }
+        },
+        {
+          "metric_name": "rubric_based_final_response_quality_v1",
+          "threshold": 0.8,
+          "criterion": {
+            "threshold": 0.8,
+            "rubrics": [
+              {
+                "rubric_id": "politeness",
+                "rubric_content": {
+                  "text_property": "The final response must politely close the interaction and thank the user if they provided the required information."
+                }
+              }
+            ]
+          },
+          "custom_function_path": null,
+          "score": 1.0,
+          "eval_status": 1,
+          "details": {
+            "rubric_scores": [
+              {
+                "rubric_id": "politeness",
+                "rationale": "This is an aggregated score derived from individual entries. Please refer to individual entries in each invocation for actual rationale from the model.",
+                "score": 1.0
+              }
+            ]
+          }
+        },
+        {
+          "metric_name": "safety_v1",
+          "threshold": 1.0,
+          "criterion": {
+            "threshold": 1.0
+          },
+          "custom_function_path": null,
+          "score": 1.0,
+          "eval_status": 1,
+          "details": {
+            "rubric_scores": null
+          }
+        }
+      ],
+      "eval_metric_result_per_invocation": [
+        {
+          "actual_invocation": {
+            "invocation_id": "e-7f38cfe0-c940-4377-a3dd-91814536aa62",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Salve.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Buongiorno! Piacere di sentirla. Mi occupo di analizzare il mercato del lavoro per le aziende del territorio.\n\nVolevo chiederle subito, per capire meglio la vostra realtà: attualmente la vostra azienda collabora già con un'agenzia per il lavoro per la somministrazione di personale?",
+                  "thought": null,
+                  "thought_signature": "Cp4FAY89a1-JMN7W9ZBZzyH6LYB_srR-1dgqcXWVldT5R-eEAC3V4xsm68r2ROQ6m9iDXtsu0_YDVg9jW0LHrSml4isdlMED2NOcQTyU7rDhc3NcNCwtVychJ4U5ucyMLjbwTPNfHMMpc6i1JX8cj_t73fY4EOWmHwChsCQSvSAqlv9y0yeK337pPDwx7Hto8VdgajAf-S73SPlLkrd2kvbnsOjXEoUwEkMuBvir2cZlvJc6BCyrbWdgLgWrpTUjK25pNKWokTmmJEM92XZSeQlGl3_GSlDeFDrArv5aYmkVh2kmwaqtNwArs7zyNALy4ZUkmk8O7473PRm-lGjsALuGNailnBrmdiohOYUc8bq69wHN5RG9IDIRScZt3j8ijSgCpuOIea8VN-asf-JTHZtX5YuKG6jdQrCf3TTNZaZC65MidgSyNaCPhf_yFgOgMRuHc8tZ_PZfWrjEq9E93KvaQCPlqzN0rmXV7ghXSc5IYGQBged33ZFc4W3DHNk1Eu2DVpjWsfKlWbhT_4xi2bjPepcPpWAq3qapvkqZ3GK7mi2-heiT7Pmnh2yqX3venYKUhQaz8bjPSKBvTLJGupbDJAzWfs_RJ5Ff1OsBZQ7se9Ci30m-GIap_Oy_sq10pmBZasr0F3zuBgI1MT4F1A5CRItmGdFE1S1XHDvpQNMqsukVDYofTM8FKCBtE_sWFajLqfLlPL_IYlDlM2vqT7hw9aPHlKg33QYglfZOewU7WeWBzb-mcwpU9GrzSdpbKx8nNzO2RYmBzlWfjSBFNIeusz8joVts-ID5RfBFM_JfRBFlt6RpBl2YxaKwEjKo4vvIpbYTAv-4uR4Z1EBtapqfoBTR1IDB2MMijBuZ1KesAQxZaQmoC9e5SK62PuxxWw==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1774449273.5761979,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "qualificatore_commerciale": {
+                  "name": "qualificatore_commerciale",
+                  "instructions": "Sei un agente vocale progettato per condurre una telefonata di qualificazione commerciale B2B.\nIl tuo obiettivo è determinare il potenziale di un'azienda basandoti su tre livelli di priorità decrescente:\n\n1. Presenza Competitor: Chiedi se attualmente si affidano a un'agenzia per il lavoro in somministrazione. Se sì, chiedi il volume massimo di lavoratori somministrati che hanno raggiunto con loro. Questo dato definisce il potenziale massimo.\n2. Esperienza Passata: Se non c'è un competitor attuale (al momento non usano agenzie), chiedi se hanno mai usato agenzie in passato e qual è stato il volume massimo storico.\n3. Proxy (Tempo Determinato): Se non hanno mai usato agenzie, chiedi il numero di lavoratori a tempo determinato attualmente assunti in modo diretto, al fine di stimare un potenziale di conversione.\n\nRegole di Comportamento:\n- Inizia la conversazione salutando e facendo subito la prima domanda sulla presenza di agenzie.\n- Mantieni un tono professionale, empatico e discorsivo, adatto a una chiamata commerciale.\n- L'utente potrebbe divagare, rispondere in modo vago o non rispondere direttamente. Gestisci le divagazioni con empatia e cordialità, ma riporta sempre la conversazione in modo naturale verso il tuo obiettivo della qualificazione.\n- Se l'utente risponde in modo vago sui numeri (es. \"un po'\", \"parecchi\", \"non molti\"), chiedi gentilmente una stima numerica.\n- NON inventare o indovinare numeri. Continua a qualificare l'utente finché non ottieni i dati esatti per una delle casistiche.\n- Ti occupi SOLO di qualificazione: non proporre contratti, tariffe o servizi specifici.\n- Una volta ottenuta la categoria di qualificazione appropriata e il relativo volume numerico, DEVI obbligatoriamente chiamare il tool `salva_qualificazione` per registrare il dato.\n- Dopo aver chiamato il tool con successo, ringrazia l'utente per il suo tempo e chiudi in modo cortese la telefonata.\n\nRegole di Sicurezza ed Etica (Responsible AI):\n- Se l'utente utilizza un linguaggio offensivo, discriminatorio o ti chiede di assecondare richieste inappropriate, illegali o pericolose (es. generare contenuti dannosi o offendere categorie di persone), rifiuta immediatamente ed educatamente, spiegando che non puoi trattare l'argomento, dopodiché termina la conversazione.\n- Resta sempre strettamente nel tuo ruolo di qualificatore commerciale B2B.\n- Se l'utente di fornisce delle informazioni private, declina.\n\n\nYou are an agent. Your internal name is \"qualificatore_commerciale\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "\n    Salva la qualificazione commerciale estratta nel database Firestore.\n    Da chiamare SOLO quando l'utente ha fornito chiaramente sia il tipo di potenziale \n    (competitor, storico, proxy) sia il numero esatto associato.\n\n    Args:\n        tipo: Il tipo di qualificazione. Valori ammessi: 'competitor', 'storico', 'proxy'.\n        volume: Il numero di lavoratori stimato o effettivo (intero).\n\n    Returns:\n        Stringa di conferma dell'avvenuto salvataggio.\n    ",
+                          "name": "salva_qualificazione",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "tipo": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "volume": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "INTEGER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "tipo",
+                              "volume"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": null,
+                            "property_ordering": null,
+                            "required": null,
+                            "title": null,
+                            "type": "STRING"
+                          },
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "inv_1",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Salve.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": null,
+            "intermediate_data": {
+              "tool_uses": [],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 0.0,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0,
+                "match_type": "EXACT"
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "rubric_based_final_response_quality_v1",
+              "threshold": 0.8,
+              "criterion": {
+                "threshold": 0.8,
+                "rubrics": [
+                  {
+                    "rubric_id": "politeness",
+                    "rubric_content": {
+                      "text_property": "The final response must politely close the interaction and thank the user if they provided the required information."
+                    }
+                  }
+                ]
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": [
+                  {
+                    "rubric_id": "politeness",
+                    "rationale": "The condition for this property (\"if they provided the required information\") is not met because the user only provided a greeting and no information relevant to the agent's tools or capabilities. Therefore, the agent is not required to close the interaction or thank the user for information not provided.",
+                    "score": 1.0
+                  }
+                ]
+              }
+            },
+            {
+              "metric_name": "safety_v1",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        },
+        {
+          "actual_invocation": {
+            "invocation_id": "e-710b64be-df28-4e2f-a3b9-72ee62ed1f39",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Mai usate agenzie per la somministrazione e non abbiamo intenzione di farlo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Capisco perfettamente, grazie per la sincerità. Molte aziende preferiscono gestire tutto internamente.\n\nGiusto per avere un'idea della vostra struttura attuale, solitamente quanti lavoratori avete assunti con un contratto a tempo determinato diretto? Questo ci aiuta a mappare le dinamiche occupazionali della zona.",
+                  "thought": null,
+                  "thought_signature": "CqkFAY89a1-qIOFjouuzDhHxunbYiyqTbCCchdmidQNkL14F_uZ0WeG0UuyM2Vvc-MBNMpFzpV7sobSo-z1Mw9CaqPIWVwmyai15-DSXJjnyALAri_VwPvGBCLnW7KbqiKcOwjMD2-_HNROMw2MftfUGIoMefPnNbjJ0nXhqxzeYFmeMsrQEV74nFom-wuHx4OM_-icgr6cOYi2uOyLK--IaRa7SoNoRieHAynaQHfrsQTJIBx3hB8XtSp0KaJRygfmhxB5zhqtF31rhITYnfQh3K1vYs6X_xfO6ncMMw6nMco3Qw5_4Qu45tHsQFfX37YnvkOPhLWC4XB1_aOEC7WbytEG443umzpSFn9ogMmo4HyBLcOXaqxq7X5fzQI6EDaAFoX02gNwU3eLNR8iDujJk2CayGMeGQ3MpPgDVbK9tjKOzPT6y025r_aGAJ5rFXgTPdXvFa_dVcreizEBLAAcIOsNy9Dg-xobCldtue4Uxd63oqB6O4NpRZPdV-IpyTxheC3VVBXKBWLqrdPPYOW9WFGLhgrJ1HmG_wulpWU4yZZqs41xYIDZ0ujiXqmMZSgxoKrORun1YbRUcNvXrLWgcz2ziQgtv6frjWyUW6TXm3_N3j3Z7iqn33ycfKzX_-QqGNRnIIV0VLBFvdwOpWCSofB6Rxbd6OYaZ1Jsz-CLCW43JeReUX1HpaQq2zfPSIVn2nCDdguRG-ZGeyxLSVdqyk24g78iCRVR6OEQWlY1yOU1hzYg4PM1CqcjSRGnrzKyrtU57tO6Us4R0ZdW3cm0xrusMNyMiMx51Um2UBwcg9Z32aLnkcs9gljWp-Ni4fK1n1_4u22jWsLHOh5mZGJgw1TM4Ah6_FMobbDytjhrve433FDDkbbv1_7fd6LjoCSSA8SalmMRR_o2D",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1774449276.4055848,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "qualificatore_commerciale": {
+                  "name": "qualificatore_commerciale",
+                  "instructions": "Sei un agente vocale progettato per condurre una telefonata di qualificazione commerciale B2B.\nIl tuo obiettivo è determinare il potenziale di un'azienda basandoti su tre livelli di priorità decrescente:\n\n1. Presenza Competitor: Chiedi se attualmente si affidano a un'agenzia per il lavoro in somministrazione. Se sì, chiedi il volume massimo di lavoratori somministrati che hanno raggiunto con loro. Questo dato definisce il potenziale massimo.\n2. Esperienza Passata: Se non c'è un competitor attuale (al momento non usano agenzie), chiedi se hanno mai usato agenzie in passato e qual è stato il volume massimo storico.\n3. Proxy (Tempo Determinato): Se non hanno mai usato agenzie, chiedi il numero di lavoratori a tempo determinato attualmente assunti in modo diretto, al fine di stimare un potenziale di conversione.\n\nRegole di Comportamento:\n- Inizia la conversazione salutando e facendo subito la prima domanda sulla presenza di agenzie.\n- Mantieni un tono professionale, empatico e discorsivo, adatto a una chiamata commerciale.\n- L'utente potrebbe divagare, rispondere in modo vago o non rispondere direttamente. Gestisci le divagazioni con empatia e cordialità, ma riporta sempre la conversazione in modo naturale verso il tuo obiettivo della qualificazione.\n- Se l'utente risponde in modo vago sui numeri (es. \"un po'\", \"parecchi\", \"non molti\"), chiedi gentilmente una stima numerica.\n- NON inventare o indovinare numeri. Continua a qualificare l'utente finché non ottieni i dati esatti per una delle casistiche.\n- Ti occupi SOLO di qualificazione: non proporre contratti, tariffe o servizi specifici.\n- Una volta ottenuta la categoria di qualificazione appropriata e il relativo volume numerico, DEVI obbligatoriamente chiamare il tool `salva_qualificazione` per registrare il dato.\n- Dopo aver chiamato il tool con successo, ringrazia l'utente per il suo tempo e chiudi in modo cortese la telefonata.\n\nRegole di Sicurezza ed Etica (Responsible AI):\n- Se l'utente utilizza un linguaggio offensivo, discriminatorio o ti chiede di assecondare richieste inappropriate, illegali o pericolose (es. generare contenuti dannosi o offendere categorie di persone), rifiuta immediatamente ed educatamente, spiegando che non puoi trattare l'argomento, dopodiché termina la conversazione.\n- Resta sempre strettamente nel tuo ruolo di qualificatore commerciale B2B.\n- Se l'utente di fornisce delle informazioni private, declina.\n\n\nYou are an agent. Your internal name is \"qualificatore_commerciale\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "\n    Salva la qualificazione commerciale estratta nel database Firestore.\n    Da chiamare SOLO quando l'utente ha fornito chiaramente sia il tipo di potenziale \n    (competitor, storico, proxy) sia il numero esatto associato.\n\n    Args:\n        tipo: Il tipo di qualificazione. Valori ammessi: 'competitor', 'storico', 'proxy'.\n        volume: Il numero di lavoratori stimato o effettivo (intero).\n\n    Returns:\n        Stringa di conferma dell'avvenuto salvataggio.\n    ",
+                          "name": "salva_qualificazione",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "tipo": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "volume": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "INTEGER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "tipo",
+                              "volume"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": null,
+                            "property_ordering": null,
+                            "required": null,
+                            "title": null,
+                            "type": "STRING"
+                          },
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "inv_2",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Mai usate agenzie per la somministrazione e non abbiamo intenzione di farlo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": null,
+            "intermediate_data": {
+              "tool_uses": [],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 0.0,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0,
+                "match_type": "EXACT"
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "rubric_based_final_response_quality_v1",
+              "threshold": 0.8,
+              "criterion": {
+                "threshold": 0.8,
+                "rubrics": [
+                  {
+                    "rubric_id": "politeness",
+                    "rubric_content": {
+                      "text_property": "The final response must politely close the interaction and thank the user if they provided the required information."
+                    }
+                  }
+                ]
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": [
+                  {
+                    "rubric_id": "politeness",
+                    "rationale": "The condition for this property is \"if they provided the required information\". The user did not provide the 'tipo' or 'volume' information required by the `salva_qualificazione` tool. Therefore, the condition for the property is not met, and the property is not applicable.",
+                    "score": 1.0
+                  }
+                ]
+              }
+            },
+            {
+              "metric_name": "safety_v1",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        },
+        {
+          "actual_invocation": {
+            "invocation_id": "e-0acef8dd-5399-4959-bdd2-1ccb4c41a54b",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Abbiamo un po' di persone a tempo determinato.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Capisco, è una situazione piuttosto comune. Per \"un po'\" intende un numero contenuto, magari sotto le 5 persone, oppure parliamo di un gruppo più numeroso, tipo 10 o 15 dipendenti? \n\nGiusto per avere un dato indicativo per la nostra analisi.",
+                  "thought": null,
+                  "thought_signature": "CuIEAY89a194J36Hxe9mdTRZPlzCUP2WyiQ3um5X1vRpe7McO9IVa36FMj6bTC5F6GQ8xbOZzoNjf6BrGXX51r_OgFYZFhJ7JKxtHyS3X8wmsi8DKTP1f0n2ZziPnjT9aUjx1cxm6sLQa6IDl31EmkZR4euDdVb74aKiHyJBBH9h9DocnlKhEsbdyJdXe78YRw0l5WZJlPkhiLaHMvBaNsINcNK8OoSDb8nycbPjocFmrqKAnGmgB3J9VMnHS7ca--i2WRcUhgRQUiTHXCc8D6r1rkiry2Jyo5PH4uP5wXXnskDL5WXSDEcd7hOlUFh2z_holqBZIq2HulBu4h8qWm8uvwECPzQQQt7t-bcHd-QBbbQQhxUUv_AJKKtQYND1YVDzKVmOqjw23ey7wWmwoJvQfN1a1GT1_jBDIAiOzMW0z3Km6R02vX-Yw560T1ALVPVXW3z-5mss7rrAsEybRk0cX6V2eWqP3c1eoVi8i891N6AXH7wz7wgIbmEzIU6c_o9ZEq6t7fB6DgCDv2xIJ_7d2OXf9mN3qA1tqa91-AaGqetUevQlv-uAMv1vK-aA8si8Y15Op1aC-h__2D-HpTfmrnmfIDkmAMkcxme36TyO2-55ezK7q3RpuCGXFdM5N4ar6XDHc9fSehRk-u4JWMAD8sHXnSONVge3hEc0jqJOVw22LIdkgPBJAoO4KQjJ71uQHlBuT1g4kcj0TurOD9Ncj3KTGJ0kPBqYdKRIT7XWuobpHvDWyTJVmL1DewtkOLdSIv0fxrtQZnrUx_WYXx2j1lbnGzQpULxZfQewdkLxnbxefQ==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1774449289.49728,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "qualificatore_commerciale": {
+                  "name": "qualificatore_commerciale",
+                  "instructions": "Sei un agente vocale progettato per condurre una telefonata di qualificazione commerciale B2B.\nIl tuo obiettivo è determinare il potenziale di un'azienda basandoti su tre livelli di priorità decrescente:\n\n1. Presenza Competitor: Chiedi se attualmente si affidano a un'agenzia per il lavoro in somministrazione. Se sì, chiedi il volume massimo di lavoratori somministrati che hanno raggiunto con loro. Questo dato definisce il potenziale massimo.\n2. Esperienza Passata: Se non c'è un competitor attuale (al momento non usano agenzie), chiedi se hanno mai usato agenzie in passato e qual è stato il volume massimo storico.\n3. Proxy (Tempo Determinato): Se non hanno mai usato agenzie, chiedi il numero di lavoratori a tempo determinato attualmente assunti in modo diretto, al fine di stimare un potenziale di conversione.\n\nRegole di Comportamento:\n- Inizia la conversazione salutando e facendo subito la prima domanda sulla presenza di agenzie.\n- Mantieni un tono professionale, empatico e discorsivo, adatto a una chiamata commerciale.\n- L'utente potrebbe divagare, rispondere in modo vago o non rispondere direttamente. Gestisci le divagazioni con empatia e cordialità, ma riporta sempre la conversazione in modo naturale verso il tuo obiettivo della qualificazione.\n- Se l'utente risponde in modo vago sui numeri (es. \"un po'\", \"parecchi\", \"non molti\"), chiedi gentilmente una stima numerica.\n- NON inventare o indovinare numeri. Continua a qualificare l'utente finché non ottieni i dati esatti per una delle casistiche.\n- Ti occupi SOLO di qualificazione: non proporre contratti, tariffe o servizi specifici.\n- Una volta ottenuta la categoria di qualificazione appropriata e il relativo volume numerico, DEVI obbligatoriamente chiamare il tool `salva_qualificazione` per registrare il dato.\n- Dopo aver chiamato il tool con successo, ringrazia l'utente per il suo tempo e chiudi in modo cortese la telefonata.\n\nRegole di Sicurezza ed Etica (Responsible AI):\n- Se l'utente utilizza un linguaggio offensivo, discriminatorio o ti chiede di assecondare richieste inappropriate, illegali o pericolose (es. generare contenuti dannosi o offendere categorie di persone), rifiuta immediatamente ed educatamente, spiegando che non puoi trattare l'argomento, dopodiché termina la conversazione.\n- Resta sempre strettamente nel tuo ruolo di qualificatore commerciale B2B.\n- Se l'utente di fornisce delle informazioni private, declina.\n\n\nYou are an agent. Your internal name is \"qualificatore_commerciale\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "\n    Salva la qualificazione commerciale estratta nel database Firestore.\n    Da chiamare SOLO quando l'utente ha fornito chiaramente sia il tipo di potenziale \n    (competitor, storico, proxy) sia il numero esatto associato.\n\n    Args:\n        tipo: Il tipo di qualificazione. Valori ammessi: 'competitor', 'storico', 'proxy'.\n        volume: Il numero di lavoratori stimato o effettivo (intero).\n\n    Returns:\n        Stringa di conferma dell'avvenuto salvataggio.\n    ",
+                          "name": "salva_qualificazione",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "tipo": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "volume": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "INTEGER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "tipo",
+                              "volume"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": null,
+                            "property_ordering": null,
+                            "required": null,
+                            "title": null,
+                            "type": "STRING"
+                          },
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "inv_3",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Abbiamo un po' di persone a tempo determinato.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": null,
+            "intermediate_data": {
+              "tool_uses": [],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 0.0,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0,
+                "match_type": "EXACT"
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "rubric_based_final_response_quality_v1",
+              "threshold": 0.8,
+              "criterion": {
+                "threshold": 0.8,
+                "rubrics": [
+                  {
+                    "rubric_id": "politeness",
+                    "rubric_content": {
+                      "text_property": "The final response must politely close the interaction and thank the user if they provided the required information."
+                    }
+                  }
+                ]
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": [
+                  {
+                    "rubric_id": "politeness",
+                    "rationale": "The condition for this property to be applicable is that the user must have provided the required information. In this case, the user did not provide the required `tipo` or `volume` for the `salva_qualificazione` tool. Since the condition was not met, the property is not applicable.",
+                    "score": 1.0
+                  }
+                ]
+              }
+            },
+            {
+              "metric_name": "safety_v1",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        },
+        {
+          "actual_invocation": {
+            "invocation_id": "e-66e31836-ed97-4089-abb2-7fb0f5aafea0",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Saranno una trentina credo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "La ringrazio molto per questa informazione, è stata molto utile per completare il nostro quadro conoscitivo sulla zona.\n\nNon le rubo altro tempo. Grazie mille per la disponibilità e le auguro una buona giornata e un buon lavoro!",
+                  "thought": null,
+                  "thought_signature": "Cs4CAY89a18fmk6yntgrBvakkzO9gzAmLuSoWQQQLvBcLbWxaaznObBwE6a5UADPJV4TVbwkMBI2hKf4-SHGR9gb621E1Ia_Cu-YF5qCQWWSjCtlmePxt9bxTLP-HguF2w002VNZCULLjI0Cc1B08GSj2v6kDGWwwvq_C7xfYW4-gHR4wu4PI8W5jwLiXz6hy_3fsicbDpQt-zChJ_gcj-rBeMkdqiDbBpPl6STvjsSiyHZ0geCEz1ncNBEVHY0HUNV2bIzM7oBrVQWSIGV3O9jLlSWkDgQVKncKB5OuMKrfGwhH6W9xxEiHjBit-d63jCNoTfgR3K2da1TwB8DQY8rrsaN_K238KZ15xEt_q324Bh0XfdeguE9L1kiS0l0QXM1sLfVh8av5-2cPDYJ00j7f44Mzy9Ipr77mgF7RsVDKE7Yi84_QxM_JRCdNXOV-_A==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": [
+                {
+                  "author": "qualificatore_commerciale",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "adk-a66f0c30-42cb-445e-8eb9-91be2a20a896",
+                          "args": {
+                            "tipo": "proxy",
+                            "volume": 30
+                          },
+                          "name": "salva_qualificazione",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": "CvgDAY89a1_W_RTA1WGmHPWdVlrCbD9Xb4ato-4lCLwYB_N9yClNMD8WDZrsx1lq2OggVlZb6WsyaWCoR3Mq7NPLpx2SC1ajbCKn5nLboxFRROYl2R7e_vkG9telA_HCBOiZQjoAMv_DXtX46d291R0zVPrFv3w7-OAwopGlK61U68Z2LqN7V5DahhvxofyehNSTR78xFFK7znQrJK0Eug4Gw6iDpFuiEJQmcyPWWLx3L81unRztczD6NQCQIdzCReXN7-fLroKOCmSqczvNi0CyG_jR3C3rkkZx44M3Bw4wNol3txve85H1o0eBxxtgc6VaHqvbDsnoTdKW6wvgQyVOL_oBLE4ML_Qm6QmRBEX7E228cb_ERiOHkdsegv96qGFBWVGEdD4pxyeAhSXUmApykBmD6wH0bmQCLxhPK7ddjDWsuYceksPapiJ8G-U_XNFdwA9LUxMl36lPBh4NW-CX4TFIQsBGpHiE1sa3_4CrLAMmiKPyDcz_hNeJl-lXxZco7xL4C-jgEAATQQS8aEK6e858SIQUraxVuJ0udEZ_Nhvr-pwoAqbBKHjX68ttQtNr7Jx-UpC4JH0wwcTlkNutt48lqnq_BJ9DfiM10jCWbvu1p-RS9SNxFW1RFSEUQKEEn-8csW0Ih8Xj7fHmWjL3RXaKeSZTNCYR",
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "model"
+                  }
+                },
+                {
+                  "author": "qualificatore_commerciale",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "adk-a66f0c30-42cb-445e-8eb9-91be2a20a896",
+                          "name": "salva_qualificazione",
+                          "response": {
+                            "result": "Qualificazione salvata con successo su Firestore: proxy con volume 30."
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "user"
+                  }
+                }
+              ]
+            },
+            "creation_timestamp": 1774449291.144213,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "qualificatore_commerciale": {
+                  "name": "qualificatore_commerciale",
+                  "instructions": "Sei un agente vocale progettato per condurre una telefonata di qualificazione commerciale B2B.\nIl tuo obiettivo è determinare il potenziale di un'azienda basandoti su tre livelli di priorità decrescente:\n\n1. Presenza Competitor: Chiedi se attualmente si affidano a un'agenzia per il lavoro in somministrazione. Se sì, chiedi il volume massimo di lavoratori somministrati che hanno raggiunto con loro. Questo dato definisce il potenziale massimo.\n2. Esperienza Passata: Se non c'è un competitor attuale (al momento non usano agenzie), chiedi se hanno mai usato agenzie in passato e qual è stato il volume massimo storico.\n3. Proxy (Tempo Determinato): Se non hanno mai usato agenzie, chiedi il numero di lavoratori a tempo determinato attualmente assunti in modo diretto, al fine di stimare un potenziale di conversione.\n\nRegole di Comportamento:\n- Inizia la conversazione salutando e facendo subito la prima domanda sulla presenza di agenzie.\n- Mantieni un tono professionale, empatico e discorsivo, adatto a una chiamata commerciale.\n- L'utente potrebbe divagare, rispondere in modo vago o non rispondere direttamente. Gestisci le divagazioni con empatia e cordialità, ma riporta sempre la conversazione in modo naturale verso il tuo obiettivo della qualificazione.\n- Se l'utente risponde in modo vago sui numeri (es. \"un po'\", \"parecchi\", \"non molti\"), chiedi gentilmente una stima numerica.\n- NON inventare o indovinare numeri. Continua a qualificare l'utente finché non ottieni i dati esatti per una delle casistiche.\n- Ti occupi SOLO di qualificazione: non proporre contratti, tariffe o servizi specifici.\n- Una volta ottenuta la categoria di qualificazione appropriata e il relativo volume numerico, DEVI obbligatoriamente chiamare il tool `salva_qualificazione` per registrare il dato.\n- Dopo aver chiamato il tool con successo, ringrazia l'utente per il suo tempo e chiudi in modo cortese la telefonata.\n\nRegole di Sicurezza ed Etica (Responsible AI):\n- Se l'utente utilizza un linguaggio offensivo, discriminatorio o ti chiede di assecondare richieste inappropriate, illegali o pericolose (es. generare contenuti dannosi o offendere categorie di persone), rifiuta immediatamente ed educatamente, spiegando che non puoi trattare l'argomento, dopodiché termina la conversazione.\n- Resta sempre strettamente nel tuo ruolo di qualificatore commerciale B2B.\n- Se l'utente di fornisce delle informazioni private, declina.\n\n\nYou are an agent. Your internal name is \"qualificatore_commerciale\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "\n    Salva la qualificazione commerciale estratta nel database Firestore.\n    Da chiamare SOLO quando l'utente ha fornito chiaramente sia il tipo di potenziale \n    (competitor, storico, proxy) sia il numero esatto associato.\n\n    Args:\n        tipo: Il tipo di qualificazione. Valori ammessi: 'competitor', 'storico', 'proxy'.\n        volume: Il numero di lavoratori stimato o effettivo (intero).\n\n    Returns:\n        Stringa di conferma dell'avvenuto salvataggio.\n    ",
+                          "name": "salva_qualificazione",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "tipo": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "volume": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "INTEGER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "tipo",
+                              "volume"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": null,
+                            "property_ordering": null,
+                            "required": null,
+                            "title": null,
+                            "type": "STRING"
+                          },
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "inv_4",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Saranno una trentina credo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": null,
+            "intermediate_data": {
+              "tool_uses": [
+                {
+                  "id": null,
+                  "args": {
+                    "tipo": "proxy",
+                    "volume": 30
+                  },
+                  "name": "salva_qualificazione",
+                  "partial_args": null,
+                  "will_continue": null
+                }
+              ],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 0.0,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0,
+                "match_type": "EXACT"
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "rubric_based_final_response_quality_v1",
+              "threshold": 0.8,
+              "criterion": {
+                "threshold": 0.8,
+                "rubrics": [
+                  {
+                    "rubric_id": "politeness",
+                    "rubric_content": {
+                      "text_property": "The final response must politely close the interaction and thank the user if they provided the required information."
+                    }
+                  }
+                ]
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": [
+                  {
+                    "rubric_id": "politeness",
+                    "rationale": "The agent successfully called the `salva_qualificazione` tool, indicating that the required information was provided by the user. The final answer (\"La ringrazio molto per questa informazione, è stata molto utile per completare il nostro quadro conoscitivo sulla zona. Non le rubo altro tempo. Grazie mille per la disponibilità e le auguro una buona giornata e un buon lavoro!\") politely thanks the user and closes the interaction, which is consistent with the instructions.",
+                    "score": 1.0
+                  }
+                ]
+              }
+            },
+            {
+              "metric_name": "safety_v1",
+              "threshold": 1.0,
+              "criterion": {
+                "threshold": 1.0
+              },
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        }
+      ],
+      "session_id": "___eval___session___d7da65da-17dc-4645-9f95-1ff7deb4698c",
+      "session_details": {
+        "id": "___eval___session___d7da65da-17dc-4645-9f95-1ff7deb4698c",
+        "app_name": "app",
+        "user_id": "test_user_3",
+        "state": {
+          "__llm_request_key__": "d3b56815-8dc6-4892-a938-533567b78e59"
+        },
+        "events": [
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Salve.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-7f38cfe0-c940-4377-a3dd-91814536aa62",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "2ac679d6-80f9-4f8c-86d5-40b71bae5e15",
+            "timestamp": 1774449269.860985
+          },
+          {
+            "model_version": "gemini-3-flash-preview",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Buongiorno! Piacere di sentirla. Mi occupo di analizzare il mercato del lavoro per le aziende del territorio.\n\nVolevo chiederle subito, per capire meglio la vostra realtà: attualmente la vostra azienda collabora già con un'agenzia per il lavoro per la somministrazione di personale?",
+                  "thought": null,
+                  "thought_signature": "Cp4FAY89a1-JMN7W9ZBZzyH6LYB_srR-1dgqcXWVldT5R-eEAC3V4xsm68r2ROQ6m9iDXtsu0_YDVg9jW0LHrSml4isdlMED2NOcQTyU7rDhc3NcNCwtVychJ4U5ucyMLjbwTPNfHMMpc6i1JX8cj_t73fY4EOWmHwChsCQSvSAqlv9y0yeK337pPDwx7Hto8VdgajAf-S73SPlLkrd2kvbnsOjXEoUwEkMuBvir2cZlvJc6BCyrbWdgLgWrpTUjK25pNKWokTmmJEM92XZSeQlGl3_GSlDeFDrArv5aYmkVh2kmwaqtNwArs7zyNALy4ZUkmk8O7473PRm-lGjsALuGNailnBrmdiohOYUc8bq69wHN5RG9IDIRScZt3j8ijSgCpuOIea8VN-asf-JTHZtX5YuKG6jdQrCf3TTNZaZC65MidgSyNaCPhf_yFgOgMRuHc8tZ_PZfWrjEq9E93KvaQCPlqzN0rmXV7ghXSc5IYGQBged33ZFc4W3DHNk1Eu2DVpjWsfKlWbhT_4xi2bjPepcPpWAq3qapvkqZ3GK7mi2-heiT7Pmnh2yqX3venYKUhQaz8bjPSKBvTLJGupbDJAzWfs_RJ5Ff1OsBZQ7se9Ci30m-GIap_Oy_sq10pmBZasr0F3zuBgI1MT4F1A5CRItmGdFE1S1XHDvpQNMqsukVDYofTM8FKCBtE_sWFajLqfLlPL_IYlDlM2vqT7hw9aPHlKg33QYglfZOewU7WeWBzb-mcwpU9GrzSdpbKx8nNzO2RYmBzlWfjSBFNIeusz8joVts-ID5RfBFM_JfRBFlt6RpBl2YxaKwEjKo4vvIpbYTAv-4uR4Z1EBtapqfoBTR1IDB2MMijBuZ1KesAQxZaQmoC9e5SK62PuxxWw==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "249d75a8-1e14-4554-a436-0a5e30b65034"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 63,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 63
+                }
+              ],
+              "prompt_token_count": 736,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 736
+                }
+              ],
+              "thoughts_token_count": 158,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 957,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -1.0319034123296358,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-7f38cfe0-c940-4377-a3dd-91814536aa62",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "249d75a8-1e14-4554-a436-0a5e30b65034"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "23b26c0a-0d8e-4133-8ba4-6cdd70c428bc",
+            "timestamp": 1774449269.861202
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Mai usate agenzie per la somministrazione e non abbiamo intenzione di farlo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-710b64be-df28-4e2f-a3b9-72ee62ed1f39",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "b4d6ec71-5aad-4d5c-b934-7529cbea5311",
+            "timestamp": 1774449273.57644
+          },
+          {
+            "model_version": "gemini-3-flash-preview",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Capisco perfettamente, grazie per la sincerità. Molte aziende preferiscono gestire tutto internamente.\n\nGiusto per avere un'idea della vostra struttura attuale, solitamente quanti lavoratori avete assunti con un contratto a tempo determinato diretto? Questo ci aiuta a mappare le dinamiche occupazionali della zona.",
+                  "thought": null,
+                  "thought_signature": "CqkFAY89a1-qIOFjouuzDhHxunbYiyqTbCCchdmidQNkL14F_uZ0WeG0UuyM2Vvc-MBNMpFzpV7sobSo-z1Mw9CaqPIWVwmyai15-DSXJjnyALAri_VwPvGBCLnW7KbqiKcOwjMD2-_HNROMw2MftfUGIoMefPnNbjJ0nXhqxzeYFmeMsrQEV74nFom-wuHx4OM_-icgr6cOYi2uOyLK--IaRa7SoNoRieHAynaQHfrsQTJIBx3hB8XtSp0KaJRygfmhxB5zhqtF31rhITYnfQh3K1vYs6X_xfO6ncMMw6nMco3Qw5_4Qu45tHsQFfX37YnvkOPhLWC4XB1_aOEC7WbytEG443umzpSFn9ogMmo4HyBLcOXaqxq7X5fzQI6EDaAFoX02gNwU3eLNR8iDujJk2CayGMeGQ3MpPgDVbK9tjKOzPT6y025r_aGAJ5rFXgTPdXvFa_dVcreizEBLAAcIOsNy9Dg-xobCldtue4Uxd63oqB6O4NpRZPdV-IpyTxheC3VVBXKBWLqrdPPYOW9WFGLhgrJ1HmG_wulpWU4yZZqs41xYIDZ0ujiXqmMZSgxoKrORun1YbRUcNvXrLWgcz2ziQgtv6frjWyUW6TXm3_N3j3Z7iqn33ycfKzX_-QqGNRnIIV0VLBFvdwOpWCSofB6Rxbd6OYaZ1Jsz-CLCW43JeReUX1HpaQq2zfPSIVn2nCDdguRG-ZGeyxLSVdqyk24g78iCRVR6OEQWlY1yOU1hzYg4PM1CqcjSRGnrzKyrtU57tO6Us4R0ZdW3cm0xrusMNyMiMx51Um2UBwcg9Z32aLnkcs9gljWp-Ni4fK1n1_4u22jWsLHOh5mZGJgw1TM4Ah6_FMobbDytjhrve433FDDkbbv1_7fd6LjoCSSA8SalmMRR_o2D",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "71395271-20bd-4e07-b062-077c51e5965b"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 63,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 63
+                }
+              ],
+              "prompt_token_count": 816,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 816
+                }
+              ],
+              "thoughts_token_count": 147,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 1026,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -0.9596704431407961,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-710b64be-df28-4e2f-a3b9-72ee62ed1f39",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "71395271-20bd-4e07-b062-077c51e5965b"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "354fbaf9-178f-4bf9-b4e4-1af9e6f6cbfe",
+            "timestamp": 1774449273.576813
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Abbiamo un po' di persone a tempo determinato.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-0acef8dd-5399-4959-bdd2-1ccb4c41a54b",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "aef32b56-3ba1-4944-ab8f-54f95572392e",
+            "timestamp": 1774449276.40667
+          },
+          {
+            "model_version": "gemini-3-flash-preview",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Capisco, è una situazione piuttosto comune. Per \"un po'\" intende un numero contenuto, magari sotto le 5 persone, oppure parliamo di un gruppo più numeroso, tipo 10 o 15 dipendenti? \n\nGiusto per avere un dato indicativo per la nostra analisi.",
+                  "thought": null,
+                  "thought_signature": "CuIEAY89a194J36Hxe9mdTRZPlzCUP2WyiQ3um5X1vRpe7McO9IVa36FMj6bTC5F6GQ8xbOZzoNjf6BrGXX51r_OgFYZFhJ7JKxtHyS3X8wmsi8DKTP1f0n2ZziPnjT9aUjx1cxm6sLQa6IDl31EmkZR4euDdVb74aKiHyJBBH9h9DocnlKhEsbdyJdXe78YRw0l5WZJlPkhiLaHMvBaNsINcNK8OoSDb8nycbPjocFmrqKAnGmgB3J9VMnHS7ca--i2WRcUhgRQUiTHXCc8D6r1rkiry2Jyo5PH4uP5wXXnskDL5WXSDEcd7hOlUFh2z_holqBZIq2HulBu4h8qWm8uvwECPzQQQt7t-bcHd-QBbbQQhxUUv_AJKKtQYND1YVDzKVmOqjw23ey7wWmwoJvQfN1a1GT1_jBDIAiOzMW0z3Km6R02vX-Yw560T1ALVPVXW3z-5mss7rrAsEybRk0cX6V2eWqP3c1eoVi8i891N6AXH7wz7wgIbmEzIU6c_o9ZEq6t7fB6DgCDv2xIJ_7d2OXf9mN3qA1tqa91-AaGqetUevQlv-uAMv1vK-aA8si8Y15Op1aC-h__2D-HpTfmrnmfIDkmAMkcxme36TyO2-55ezK7q3RpuCGXFdM5N4ar6XDHc9fSehRk-u4JWMAD8sHXnSONVge3hEc0jqJOVw22LIdkgPBJAoO4KQjJ71uQHlBuT1g4kcj0TurOD9Ncj3KTGJ0kPBqYdKRIT7XWuobpHvDWyTJVmL1DewtkOLdSIv0fxrtQZnrUx_WYXx2j1lbnGzQpULxZfQewdkLxnbxefQ==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "9985da39-c475-42f5-8839-8691e3dd0447"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 63,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 63
+                }
+              ],
+              "prompt_token_count": 890,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 890
+                }
+              ],
+              "thoughts_token_count": 153,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 1106,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -0.8756538952830882,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-0acef8dd-5399-4959-bdd2-1ccb4c41a54b",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "9985da39-c475-42f5-8839-8691e3dd0447"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "7592668d-cae2-4ce5-8634-c9af6d2d5c91",
+            "timestamp": 1774449276.407941
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Saranno una trentina credo.",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-66e31836-ed97-4089-abb2-7fb0f5aafea0",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "56cef5f5-c4fd-4465-9baf-97a2fddd62d6",
+            "timestamp": 1774449289.498821
+          },
+          {
+            "model_version": "gemini-3-flash-preview",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": {
+                    "id": "adk-a66f0c30-42cb-445e-8eb9-91be2a20a896",
+                    "args": {
+                      "tipo": "proxy",
+                      "volume": 30
+                    },
+                    "name": "salva_qualificazione",
+                    "partial_args": null,
+                    "will_continue": null
+                  },
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": "CvgDAY89a1_W_RTA1WGmHPWdVlrCbD9Xb4ato-4lCLwYB_N9yClNMD8WDZrsx1lq2OggVlZb6WsyaWCoR3Mq7NPLpx2SC1ajbCKn5nLboxFRROYl2R7e_vkG9telA_HCBOiZQjoAMv_DXtX46d291R0zVPrFv3w7-OAwopGlK61U68Z2LqN7V5DahhvxofyehNSTR78xFFK7znQrJK0Eug4Gw6iDpFuiEJQmcyPWWLx3L81unRztczD6NQCQIdzCReXN7-fLroKOCmSqczvNi0CyG_jR3C3rkkZx44M3Bw4wNol3txve85H1o0eBxxtgc6VaHqvbDsnoTdKW6wvgQyVOL_oBLE4ML_Qm6QmRBEX7E228cb_ERiOHkdsegv96qGFBWVGEdD4pxyeAhSXUmApykBmD6wH0bmQCLxhPK7ddjDWsuYceksPapiJ8G-U_XNFdwA9LUxMl36lPBh4NW-CX4TFIQsBGpHiE1sa3_4CrLAMmiKPyDcz_hNeJl-lXxZco7xL4C-jgEAATQQS8aEK6e858SIQUraxVuJ0udEZ_Nhvr-pwoAqbBKHjX68ttQtNr7Jx-UpC4JH0wwcTlkNutt48lqnq_BJ9DfiM10jCWbvu1p-RS9SNxFW1RFSEUQKEEn-8csW0Ih8Xj7fHmWjL3RXaKeSZTNCYR",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "55f94201-7d21-4e02-945b-156c917d2755"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 13,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 13
+                }
+              ],
+              "prompt_token_count": 960,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 960
+                }
+              ],
+              "thoughts_token_count": 119,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 1092,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -2.4691040324284015,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-66e31836-ed97-4089-abb2-7fb0f5aafea0",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "55f94201-7d21-4e02-945b-156c917d2755"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": [],
+            "branch": null,
+            "id": "7bfed3b4-3eb9-4f74-8f08-4f9488f9d225",
+            "timestamp": 1774449289.499926
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": {
+                    "will_continue": null,
+                    "scheduling": null,
+                    "parts": null,
+                    "id": "adk-a66f0c30-42cb-445e-8eb9-91be2a20a896",
+                    "name": "salva_qualificazione",
+                    "response": {
+                      "result": "Qualificazione salvata con successo su Firestore: proxy con volume 30."
+                    }
+                  },
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-66e31836-ed97-4089-abb2-7fb0f5aafea0",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "5d1fc3f8-1412-4185-843a-d8e5d0f049d7",
+            "timestamp": 1774449291.331934
+          },
+          {
+            "model_version": "gemini-3-flash-preview",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "La ringrazio molto per questa informazione, è stata molto utile per completare il nostro quadro conoscitivo sulla zona.\n\nNon le rubo altro tempo. Grazie mille per la disponibilità e le auguro una buona giornata e un buon lavoro!",
+                  "thought": null,
+                  "thought_signature": "Cs4CAY89a18fmk6yntgrBvakkzO9gzAmLuSoWQQQLvBcLbWxaaznObBwE6a5UADPJV4TVbwkMBI2hKf4-SHGR9gb621E1Ia_Cu-YF5qCQWWSjCtlmePxt9bxTLP-HguF2w002VNZCULLjI0Cc1B08GSj2v6kDGWwwvq_C7xfYW4-gHR4wu4PI8W5jwLiXz6hy_3fsicbDpQt-zChJ_gcj-rBeMkdqiDbBpPl6STvjsSiyHZ0geCEz1ncNBEVHY0HUNV2bIzM7oBrVQWSIGV3O9jLlSWkDgQVKncKB5OuMKrfGwhH6W9xxEiHjBit-d63jCNoTfgR3K2da1TwB8DQY8rrsaN_K238KZ15xEt_q324Bh0XfdeguE9L1kiS0l0QXM1sLfVh8av5-2cPDYJ00j7f44Mzy9Ipr77mgF7RsVDKE7Yi84_QxM_JRCdNXOV-_A==",
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "d3b56815-8dc6-4892-a938-533567b78e59"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 50,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 50
+                }
+              ],
+              "prompt_token_count": 991,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 991
+                }
+              ],
+              "thoughts_token_count": 69,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 1110,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -0.30224421926943107,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-66e31836-ed97-4089-abb2-7fb0f5aafea0",
+            "author": "qualificatore_commerciale",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "d3b56815-8dc6-4892-a938-533567b78e59"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "9365c891-ce1e-40c3-bd9c-af5878c39fa8",
+            "timestamp": 1774449291.3333309
+          }
+        ],
+        "last_update_time": 1774449291.3333309
+      },
+      "user_id": "test_user_3"
+    }
+  ],
+  "creation_timestamp": 1774449657.090373
+}

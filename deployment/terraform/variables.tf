@@ -18,9 +18,14 @@ variable "project_name" {
   default     = "randstad-adk"
 }
 
+variable "env" {
+  type        = string
+  description = "Environment name (e.g., dev, staging, prod)"
+}
+
 variable "project_id" {
   type        = string
-  description = "**Dev** Google Cloud Project ID for resource deployment."
+  description = "Google Cloud Project ID for resource deployment."
 }
 
 variable "region" {
@@ -51,5 +56,6 @@ variable "app_sa_roles" {
     "roles/cloudtrace.agent",
     "roles/storage.admin",
     "roles/serviceusage.serviceUsageConsumer",
+    "roles/datastore.user",
   ]
 }
