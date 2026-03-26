@@ -18,7 +18,12 @@ import os
 import time
 import uuid
 
+import urllib3
 from locust import HttpUser, between, task
+
+# Suppress InsecureRequestWarning if SSL verification is disabled
+if os.environ.get("LOCUST_SKIP_CERT_VERIFY", "").lower() == "true":
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ENDPOINT = "/run_sse"
 
@@ -40,18 +45,33 @@ class ChatStreamUser(HttpUser):
         headers = {"Content-Type": "application/json"}
         if os.environ.get("_ID_TOKEN"):
             headers["Authorization"] = f"Bearer {os.environ['_ID_TOKEN']}"
+        
+        # SSL Verification toggle
+        verify_ssl = os.environ.get("LOCUST_SKIP_CERT_VERIFY", "").lower() != "true"
+        
         # Create session first
         user_id = f"user_{uuid.uuid4()}"
         session_data = {"state": {"preferred_language": "English", "visit_count": 1}}
 
-        session_response = self.client.post(
+        with self.client.post(
             f"/apps/app/users/{user_id}/sessions",
             headers=headers,
             json=session_data,
-        )
-
-        # Get session_id from response
-        session_id = session_response.json()["id"]
+            verify=verify_ssl,
+            catch_response=True,
+            name="Create Session"
+        ) as session_response:
+            if session_response.status_code != 200 and session_response.status_code != 201:
+                session_response.failure(f"Failed to create session: {session_response.status_code} - {session_response.text[:100]}")
+                logger.error("Session creation failed: %s - %s", session_response.status_code, session_response.text)
+                return
+            
+            try:
+                session_id = session_response.json()["id"]
+            except (json.JSONDecodeError, KeyError) as e:
+                session_response.failure(f"Invalid JSON in session response: {str(e)}")
+                logger.error("Invalid session response JSON: %s", session_response.text)
+                return
 
         # Send chat message
         data = {
@@ -74,6 +94,7 @@ class ChatStreamUser(HttpUser):
             catch_response=True,
             stream=True,
             params={"alt": "sse"},
+            verify=verify_ssl,
         ) as response:
             if response.status_code == 200:
                 events = []
