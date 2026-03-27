@@ -4248,6 +4248,7 @@ dependencies = [
     { name = "google-cloud-firestore" },
     { name = "google-cloud-logging" },
     { name = "opentelemetry-instrumentation-google-genai" },
+    { name = "pyyaml" },
 ]
 
 [package.optional-dependencies]
@@ -4284,6 +4285,7 @@ requires-dist = [
     { name = "jupyter", marker = "extra == 'jupyter'", specifier = ">=1.0.0,<2.0.0" },
     { name = "locust", marker = "extra == 'load-test'", specifier = ">=2.31.1" },
     { name = "opentelemetry-instrumentation-google-genai", specifier = ">=0.1.0,<1.0.0" },
+    { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "ruff", marker = "extra == 'lint'", specifier = ">=0.4.6,<1.0.0" },
     { name = "ty", marker = "extra == 'lint'", specifier = ">=0.0.1a0" },
 ]

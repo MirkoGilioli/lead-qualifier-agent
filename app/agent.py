@@ -30,41 +30,37 @@ from google.genai import types
 from .tools import salva_qualificazione
 from .prompts import INSTRUCTION
 from .agents.researcher import ricercatore_azienda
+from .app_utils.config import config
 
 # Configurazione ambiente GCP
 _, project_id = google.auth.default()
 os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+
+# Caricamento variabili d'ambiente configurate nel YAML
+for k, v in config.get("env", {}).items():
+    os.environ[k] = str(v)
 
 # Safety settings comuni
-safety_settings = [
-    types.SafetySetting(
-        category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-    types.SafetySetting(
-        category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-    types.SafetySetting(
-        category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-    types.SafetySetting(
-        category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    ),
-]
+def get_safety_settings():
+    conf_safety = config.get("agents.root.safety_settings", {})
+    settings = []
+    for category, threshold in conf_safety.items():
+        settings.append(
+            types.SafetySetting(
+                category=getattr(types.HarmCategory, f"HARM_CATEGORY_{category}"),
+                threshold=getattr(types.HarmBlockThreshold, threshold),
+            )
+        )
+    return settings
 
 # Root Agent: Il "Direttore d'orchestra"
 root_agent = Agent(
-    name="qualificatore_commerciale",
+    name=config.get("agents.root.name", "qualificatore_commerciale"),
     model=Gemini(
-        model="gemini-3-flash-preview",
+        model=config.get("agents.root.model", "gemini-3-flash-preview"),
         config=types.GenerateContentConfig(
-            temperature=0.2,
-            safety_settings=safety_settings,
+            temperature=config.get("agents.root.temperature", 0.2),
+            safety_settings=get_safety_settings(),
         )
     ),
     instruction=INSTRUCTION,
@@ -76,5 +72,5 @@ root_agent = Agent(
 
 app = App(
     root_agent=root_agent,
-    name="app",
+    name=config.get("app.name", "app"),
 )
