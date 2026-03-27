@@ -17,17 +17,18 @@ from google.adk.models import Gemini
 from google.adk.tools import google_search
 from google.genai import types
 from ..prompts import RESEARCHER_INSTRUCTION
+from ..app_utils.config import config
 
 # Configurazione del sub-agente ricercatore
 # Note: Usiamo temperature 0.0 per la massima fedeltà ai dati cercati
 ricercatore_azienda = Agent(
-    name="ricercatore_azienda",
+    name=config.get("agents.researcher.name", "ricercatore_azienda"),
     description="Ricerca informazioni dettagliate su un'azienda (settore, dimensioni, news) utilizzando Google Search.",
     model=Gemini(
-        model="gemini-3-flash-preview",
+        model=config.get("agents.researcher.model", "gemini-3-flash-preview"),
         config=types.GenerateContentConfig(
-            temperature=0.0,
-            max_output_tokens=500,
+            temperature=config.get("agents.researcher.temperature", 0.0),
+            max_output_tokens=config.get("agents.researcher.max_output_tokens", 500),
         )
     ),
     instruction=RESEARCHER_INSTRUCTION,

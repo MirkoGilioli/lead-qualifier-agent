@@ -26,6 +26,7 @@ from google.cloud import logging as google_cloud_logging
 
 from app.app_utils.telemetry import setup_telemetry
 from app.app_utils.typing import Feedback
+from app.app_utils.config import config
 
 setup_telemetry()
 _, project_id = google.auth.default()
@@ -45,7 +46,7 @@ session_service_uri = None
 artifact_service_uri = f"gs://{logs_bucket_name}" if logs_bucket_name else None
 
 # Check if web UI should be enabled (defaults to True if not specified)
-enable_web_ui = os.getenv("ENABLE_WEB_UI", "True").lower() == "true"
+enable_web_ui = config.get("fastapi.enable_web_ui", True)
 
 app: FastAPI = get_fast_api_app(
     agents_dir=AGENT_DIR,
