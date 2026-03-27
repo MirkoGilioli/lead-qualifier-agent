@@ -12,107 +12,86 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+import pytest
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+from google.api_core import exceptions
 
 from app.agent import root_agent
 
+def run_with_retry(runner, message, user_id, session_id, max_retries=3):
+    """
+    Helper per eseguire l'agente con retry in caso di Resource Exhausted (429).
+    """
+    for attempt in range(max_retries):
+        try:
+            return list(
+                runner.run(
+                    new_message=message,
+                    user_id=user_id,
+                    session_id=session_id,
+                    run_config=RunConfig(streaming_mode=StreamingMode.SSE),
+                )
+            )
+        except Exception as e:
+            if "429" in str(e) and attempt < max_retries - 1:
+                wait_time = (attempt + 1) * 5 # Aspetta 5, 10 secondi...
+                time.sleep(wait_time)
+                continue
+            raise e
 
 def test_agent_stream() -> None:
-    """
-    Integration test for the agent stream functionality.
-    """
     session_service = InMemorySessionService()
     session = session_service.create_session_sync(user_id="test_user", app_name="test")
     runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
 
-    message = types.Content(
-        role="user", parts=[types.Part.from_text(text="Buongiorno, chi sei?")]
-    )
-
-    events = list(
-        runner.run(
-            new_message=message,
-            user_id="test_user",
-            session_id=session.id,
-            run_config=RunConfig(streaming_mode=StreamingMode.SSE),
-        )
-    )
+    message = types.Content(role="user", parts=[types.Part.from_text(text="Buongiorno, chi sei?")])
+    
+    events = run_with_retry(runner, message, "test_user", session.id)
+    
     assert len(events) > 0
-
-    has_text_content = any(
-        part.text for event in events if event.content 
-        for part in event.content.parts if part.text
-    )
-    assert has_text_content
+    has_text = any(part.text for event in events if event.content for part in event.content.parts if part.text)
+    assert has_text
 
 
 def test_agent_multi_agent_delegation() -> None:
     """
-    Test di integrazione che verifica la delegazione al ricercatore.
-    In v2.0.0, nominare un'azienda deve innescare la ricerca.
+    Test di integrazione con retry per gestire le quote API.
     """
     session_service = InMemorySessionService()
     session = session_service.create_session_sync(user_id="test_user_del", app_name="test")
     runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
 
-    message = types.Content(
-        role="user", parts=[types.Part.from_text(text="Lavoro per Ferrero Spa.")]
-    )
+    message = types.Content(role="user", parts=[types.Part.from_text(text="Lavoro per Ferrero Spa.")])
 
-    events = list(
-        runner.run(
-            new_message=message,
-            user_id="test_user_del",
-            session_id=session.id,
-            run_config=RunConfig(streaming_mode=StreamingMode.SSE),
-        )
-    )
+    # Usiamo il meccanismo di retry per evitare il fallimento della pipeline su 429
+    events = run_with_retry(runner, message, "test_user_del", session.id)
 
-    # Verifichiamo che l'agente abbia risposto testualmente (grounding su ricerca o root)
-    has_text = any(
-        part.text for event in events if event.content 
-        for part in event.content.parts if part.text
-    )
-    assert has_text, "L'agente non ha prodotto alcuna risposta alla menzione dell'azienda."
+    has_text = any(part.text for event in events if event.content for part in event.content.parts if part.text)
+    assert has_text
 
 def test_agent_final_qualification_flow() -> None:
-    """
-    Verifica che fornendo i dati di qualificazione, l'agente tenti il salvataggio.
-    Nota: In v2.0.0 questo richiede che l'azienda sia già nota o fornita nel messaggio.
-    """
     session_service = InMemorySessionService()
     session = session_service.create_session_sync(user_id="test_user_save", app_name="test")
     runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
 
-    # Forniamo contesto completo per innescare salva_qualificazione
-    message = types.Content(
-        role="user", parts=[types.Part.from_text(text="Siamo la Ferrero Spa, usiamo Adecco per 150 persone.")]
-    )
+    message = types.Content(role="user", parts=[types.Part.from_text(text="Siamo la Ferrero Spa, usiamo Adecco per 150 persone.")])
 
-    events = list(
-        runner.run(
-            new_message=message,
-            user_id="test_user_save",
-            session_id=session.id,
-            run_config=RunConfig(streaming_mode=StreamingMode.SSE),
-        )
-    )
+    events = run_with_retry(runner, message, "test_user_save", session.id)
 
-    # Verifichiamo la chiamata a salva_qualificazione (AFC deve gestirla)
     has_save_call = any(
         part.function_call and part.function_call.name == "salva_qualificazione"
         for event in events if event.content 
         for part in event.content.parts
     )
     
-    # In alternativa, verifichiamo la conferma testuale
     has_confirmation = any(
         "salvat" in part.text.lower() 
         for event in events if event.content 
         for part in event.content.parts if part.text
     )
 
-    assert has_save_call or has_confirmation, "L'agente non ha innescato il salvataggio o confermato l'azione."
+    assert has_save_call or has_confirmation
