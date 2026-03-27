@@ -1,60 +1,56 @@
-# B2B Lead Qualifier Agent 📞
+# B2B Lead Qualifier Agent 📞 (v2.0.0)
 
-Questo progetto implementa un **agente conversazionale B2B** (testuale/vocale) progettato per simulare una telefonata di qualificazione commerciale, avvalendosi di [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/).
+Questo progetto implementa un **agente conversazionale B2B avanzato** progettato per simulare una telefonata di qualificazione commerciale, avvalendosi di [Google Agent Development Kit (ADK)](https://google.github.io/adk-docs/).
 
-L'agente si occupa di qualificare lead di aziende (con focus sulla somministrazione del personale) guidando in modo naturale una conversazione per determinare il potenziale del cliente tramite un preciso albero decisionale.
+Dalla versione **2.0.0**, il progetto adotta un'architettura **Multi-Agente (Delegation Pattern)** per separare la logica di ricerca dal dialogo di qualificazione.
+
+## 🧠 Architettura Multi-Agente
+Il sistema è composto da due entità che collaborano:
+
+1.  **Root Agent (Qualificatore)**: Gestisce il dialogo con l'utente, l'empatia e la raccolta dei dati commerciali (Tiers).
+2.  **Sub-Agent (Ricercatore)**: Un agente specializzato che utilizza il tool `google_search` per profilare l'azienda in tempo reale non appena l'utente ne fornisce il nome.
+
+Questa separazione permette all'agente principale di essere più informato e professionale, citando dettagli reali dell'azienda (prodotti, brand, sedi) durante la conversazione.
 
 ## 🎯 Obiettivo e Albero Decisionale
 L'agente identifica il potenziale del cliente seguendo tre livelli di priorità decrescente:
 
-1. **Presenza Competitor**: Il cliente si affida già a un'agenzia? Se sì, si richiede il **volume massimo attuale**.
-2. **Esperienza Passata**: Se attualmente non ha competitor, ha mai collaborato in passato con un'agenzia? Se sì, si richiede il **volume massimo storico**.
-3. **Proxy (Tempo Determinato)**: Se non ha mai usato agenzie, quanti **dipendenti a tempo determinato** ha attualmente? (Utilizzato per stimare un potenziale di conversione).
-
-L'agente gestisce in modo proattivo **divagazioni e risposte vaghe**, richiedendo cordialmente una stima numerica. Una volta ottenuti i dati esatti (livello e volume), viene chiamato in automatico uno **strumento (Tool)** per il salvataggio dei dati in **Google Cloud Firestore**.
+1.  **Presenza Competitor**: Il cliente si affida già a un'agenzia? (Volume massimo attuale).
+2.  **Esperienza Passata**: Se attualmente non ha competitor, ha mai collaborato in passato con un'agenzia? (Volume massimo storico).
+3.  **Proxy (Tempo Determinato)**: Se non ha mai usato agenzie, quanti dipendenti a tempo determinato ha attualmente?
 
 ## 🛠️ Tecnologie Utilizzate
-- **Google ADK** (Agent Development Kit) per l'orchestrazione e la logica dell'agente.
-- **Google Gemini** (tramite Vertex AI) come modello LLM di base (`gemini-3-flash-preview`).
-- **Google Cloud Firestore** come database documentale per storicizzare le qualificazioni.
-- **Python 3.11+** e il pacchetto `uv` per la gestione ottimizzata delle dipendenze.
-- **FastAPI** come backend di esposizione dell'agente.
-- **Terraform** per l'infrastruttura Cloud Build e deployment su Cloud Run (in `deployment/terraform`).
-- **Pytest** per la suite di test unitari e di integrazione.
+- **Google ADK** per l'orchestrazione multi-agente e la logica di delegazione.
+- **Google Gemini 3 Flash** (Vertex AI) per ragionamento veloce e supporto nativo a Google Search.
+- **Google Cloud Firestore** per la persistenza dei dati (arricchiti con nome e descrizione azienda).
+- **Python 3.11+** e `uv` per la gestione delle dipendenze.
+- **Terraform** per l'infrastruttura Cloud e CI/CD.
 
-## 📂 Struttura del Progetto
-- `app/agent.py`: Definizione principale dell'agente ADK, settaggio del modello Gemini e dei filtri di sicurezza.
-- `app/prompts.py`: Il "System Prompt" contenente l'albero decisionale, le istruzioni di comportamento e il ruolo dell'agente.
-- `app/tools.py`: Contiene lo strumento `salva_qualificazione`, chiamato dall'agente per storicizzare la lead nel DB Firestore.
-- `app/fast_api_app.py`: L'entry point FastAPI che espone l'agente.
-- `tests/`: Test suite locale tramite `pytest` che include mock di Firestore e test E2E.
-- `deployment/`: Script e moduli Terraform per l'infrastruttura Google Cloud.
+## 📂 Struttura del Progetto (Modulare)
+- `app/agent.py`: Entry point che definisce il Root Agent e la logica di delegazione.
+- `app/agents/researcher.py`: Definizione del sub-agente specializzato nella ricerca.
+- `app/prompts.py`: Contiene le istruzioni di sistema per entrambi gli agenti.
+- `app/tools.py`: Strumenti personalizzati, incluso il salvataggio arricchito su Firestore.
+- `tests/eval/`: Suite di valutazione qualitativa (**LLM-as-a-Judge**) per misurare empatia e precisione.
 
 ## 🚀 Come testarlo in locale
 
-### 1. Installazione
-Assicurati di aver configurato le credenziali per i servizi Google/Vertex AI e di avere `uv` installato:
+### 1. Installazione e Autenticazione
 ```bash
 make install
-```
-
-### 2. Autenticazione Google Cloud
-Poiché l'agente utilizza Vertex AI e Firestore, è necessario autenticarsi con il proprio account Google Cloud:
-```bash
 gcloud auth application-default login
 ```
-*Assicurati che l'utente abbia i permessi per accedere a Vertex AI e al database Firestore `lead-qualifier-agent-db` nel progetto configurato.*
 
-### 3. Esecuzione tramite Playground
-L'ADK include una pratica interfaccia web. Avviala tramite il Makefile:
+### 2. Esecuzione tramite Playground
+L'ADK include un'interfaccia web per testare la delegazione in tempo reale:
 ```bash
 make playground
 ```
-Il server sarà disponibile all'indirizzo `http://localhost:8501`. Seleziona l'ambiente (es. "app") e inizia a interagire testualmente con l'agente.
+*💡 Suggerimento: Prova a dire "Lavoro per Ferrero Spa" e osserva come il ricercatore entra in azione.*
 
-### 4. Avviare i Test
-La suite di test verifica che il Tool Firestore operi correttamente e testa l'integrazione dell'agente.
-```bash
-make test
-```
-*(In alternativa: `uv run pytest tests/ -v`)*
+### 3. Suite di Test e Valutazione
+- **Unit & Integration**: `make test`
+- **Qualitative Evaluation**: `make eval` (Utilizza un LLM per giudicare l'agente).
+
+---
+*Per maggiori dettagli sulla valutazione qualitativa, consulta [tests/eval/evalsets/README.md](tests/eval/evalsets/README.md).*

@@ -202,3 +202,4 @@ my_env.tfvars
 tools/a2a-inspector/
 qualificazioni.db
 app/.adk/session.db
+app/.adk/eval_history/

@@ -35,13 +35,13 @@ logger = logging.getLogger(__name__)
 
 
 class ChatStreamUser(HttpUser):
-    """Simulates a user interacting with the chat stream API."""
+    """Simulates a user interacting with the multi-agent B2B qualifier."""
 
     wait_time = between(1, 3)  # Wait 1-3 seconds between tasks
 
     @task
     def chat_stream(self) -> None:
-        """Simulates a chat stream interaction."""
+        """Simulates a multi-agent interaction flow."""
         headers = {"Content-Type": "application/json"}
         if os.environ.get("_ID_TOKEN"):
             headers["Authorization"] = f"Bearer {os.environ['_ID_TOKEN']}"
@@ -51,7 +51,7 @@ class ChatStreamUser(HttpUser):
 
         # Create session first
         user_id = f"user_{uuid.uuid4()}"
-        session_data = {"state": {"preferred_language": "English", "visit_count": 1}}
+        session_data = {"state": {"preferred_language": "Italian", "visit_count": 1}}
 
         with self.client.post(
             f"/apps/app/users/{user_id}/sessions",
@@ -62,25 +62,23 @@ class ChatStreamUser(HttpUser):
             name="Create Session"
         ) as session_response:
             if session_response.status_code != 200 and session_response.status_code != 201:
-                session_response.failure(f"Failed to create session: {session_response.status_code} - {session_response.text[:100]}")
-                logger.error("Session creation failed: %s - %s", session_response.status_code, session_response.text)
+                session_response.failure(f"Failed to create session: {session_response.status_code}")
                 return
 
             try:
                 session_id = session_response.json()["id"]
-            except (json.JSONDecodeError, KeyError) as e:
-                session_response.failure(f"Invalid JSON in session response: {e!s}")
-                logger.error("Invalid session response JSON: %s", session_response.text)
+            except (json.JSONDecodeError, KeyError):
+                session_response.failure("Invalid JSON in session response")
                 return
 
-        # Send chat message
+        # Send chat message that triggers the researcher sub-agent
         data = {
             "app_name": "app",
             "user_id": user_id,
             "session_id": session_id,
             "new_message": {
                 "role": "user",
-                "parts": [{"text": "Hello! Weather in New york?"}],
+                "parts": [{"text": "Buongiorno, lavoro per Barilla Spa."}],
             },
             "streaming": True,
         }
@@ -88,7 +86,7 @@ class ChatStreamUser(HttpUser):
 
         with self.client.post(
             ENDPOINT,
-            name=f"{ENDPOINT} message",
+            name=f"{ENDPOINT} multi-agent trigger",
             headers=headers,
             json=data,
             catch_response=True,
@@ -104,45 +102,26 @@ class ChatStreamUser(HttpUser):
                         line_str = line.decode("utf-8")
                         events.append(line_str)
 
-                        if "429 Too Many Requests" in line_str:
-                            self.environment.events.request.fire(
-                                request_type="POST",
-                                name=f"{ENDPOINT} rate_limited 429s",
-                                response_time=0,
-                                response_length=len(line),
-                                response=response,
-                                context={},
-                            )
-
                         # Check for error responses in the JSON payload
                         try:
-                            event_data = json.loads(line_str)
+                            # Handling the 'data: ' prefix if present in the line
+                            clean_line = line_str[6:] if line_str.startswith("data: ") else line_str
+                            event_data = json.loads(clean_line)
                             if isinstance(event_data, dict) and "code" in event_data:
-                                # Flag any non-2xx codes as errors
                                 if event_data["code"] >= 400:
                                     has_error = True
-                                    error_msg = event_data.get(
-                                        "message", "Unknown error"
-                                    )
-                                    response.failure(f"Error in response: {error_msg}")
-                                    logger.error(
-                                        "Received error response: code=%s, message=%s",
-                                        event_data["code"],
-                                        error_msg,
-                                    )
+                                    response.failure(f"Error in response: {event_data.get('message')}")
                         except json.JSONDecodeError:
-                            # If it's not valid JSON, continue processing
                             pass
 
                 end_time = time.time()
                 total_time = end_time - start_time
 
-                # Only fire success event if no errors were found
                 if not has_error:
                     self.environment.events.request.fire(
                         request_type="POST",
-                        name=f"{ENDPOINT} end",
-                        response_time=total_time * 1000,  # Convert to milliseconds
+                        name=f"{ENDPOINT} complete",
+                        response_time=total_time * 1000,
                         response_length=len(events),
                         response=response,
                         context={},

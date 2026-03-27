@@ -1,81 +1,34 @@
-# Robust Load Testing for Generative AI Applications
+# Load Testing per Applicazioni Multi-Agente
 
-This directory provides a comprehensive load testing framework for your Generative AI application, leveraging the power of [Locust](http://locust.io), a leading open-source load testing tool.
+Questa directory fornisce un framework di test del carico per l'agente B2B, utilizzando [Locust](http://locust.io). 
 
-## Using the Makefile (Recommended)
+Dalla versione **2.0.0**, i test di carico sono stati aggiornati per simulare scenari reali che innescano la delegazione tra l'agente principale e il ricercatore, misurando la latenza del sistema durante le chiamate esterne (Google Search) e le operazioni su Firestore.
 
-The easiest way to run load tests is using the provided `Makefile` targets. This handles dependencies, environment discovery, and authentication automatically.
+## Utilizzo tramite Makefile (Raccomandato)
 
-### Local Load Testing
+Il modo più semplice per eseguire i test è usare i target del `Makefile`, che gestiscono automaticamente dipendenze, scoperta dell'ambiente e autenticazione.
 
+### Test Locale
 ```bash
 make load-test ENV=dev
 ```
-*Note: This will target your local environment if the Cloud Run service is not found, or you can specify USERS, RATE, and DURATION.*
 
-### Remote Load Testing (Staging/Prod)
-
+### Test Remoto (Staging/Prod)
 ```bash
 make load-test ENV=staging USERS=50 RATE=5 DURATION=1m
 ```
 
-This command will:
-1. Sync dependencies (including `locust`).
-2. Discover the Cloud Run service URL for the specified environment.
-3. Obtain a fresh identity token for authentication.
-4. Execute Locust in headless mode.
-5. Generate reports in `tests/load_test/.results/`.
+Il comando eseguirà:
+1. Sincronizzazione dipendenze (`locust`).
+2. Individuazione dell'URL di Cloud Run.
+3. Esecuzione di Locust in modalità headless.
+4. Generazione dei report in `tests/load_test/.results/`.
 
-## Manual Execution (Advanced)
+## Cosa misuriamo?
+In un'architettura multi-agente, è fondamentale monitorare:
+*   **Tempo di risposta al primo turno**: L'impatto della delegazione al ricercatore.
+*   **Stabilità della sessione**: La capacità del server di gestire molteplici agenti concorrenti.
+*   **Throughput di salvataggio**: La velocità di scrittura su Firestore arricchita dai dati di ricerca.
 
-If you prefer manual control, follow these steps:
-
-### Local Load Testing
-
-**1. Start the FastAPI Server:**
-
-Launch the FastAPI server in a separate terminal:
-
-```bash
-uv run uvicorn app.fast_api_app:app --host 0.0.0.0 --port 8000 --reload
-```
-
-**2. Execute the Load Test:**
-
-```bash
-uv run locust -f tests/load_test/load_test.py \
--H http://127.0.0.1:8000 \
---headless \
--t 30s -u 10 -r 2 \
---csv=tests/load_test/.results/results \
---html=tests/load_test/.results/report.html
-```
-
-### Remote Load Testing (Targeting Cloud Run)
-
-**1. Obtain Cloud Run Service URL:**
-
-```bash
-export RUN_SERVICE_URL=$(gcloud run services describe <service-name> --format='value(status.url)')
-```
-
-**2. Obtain ID Token:**
-
-```bash
-export _ID_TOKEN=$(gcloud auth print-identity-token -q)
-```
-
-**3. Execute the Load Test:**
-
-```bash
-_ID_TOKEN=$_ID_TOKEN uv run locust -f tests/load_test/load_test.py \
--H $RUN_SERVICE_URL \
---headless \
--t 30s -u 60 -r 2 \
---csv=tests/load_test/.results/results \
---html=tests/load_test/.results/report.html
-```
-
-## Results
-
-Comprehensive CSV and HTML reports detailing the load test performance will be generated and saved in the `tests/load_test/.results` directory.
+## Risultati
+I report dettagliati in formato CSV e HTML verranno salvati nella directory `tests/load_test/.results/`.
