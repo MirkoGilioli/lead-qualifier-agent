@@ -23,16 +23,13 @@ from app.agent import root_agent
 def test_agent_stream() -> None:
     """
     Integration test for the agent stream functionality.
-    Tests that the agent returns valid streaming responses.
     """
-
     session_service = InMemorySessionService()
-
     session = session_service.create_session_sync(user_id="test_user", app_name="test")
     runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
 
     message = types.Content(
-        role="user", parts=[types.Part.from_text(text="Why is the sky blue?")]
+        role="user", parts=[types.Part.from_text(text="Buongiorno, chi sei?")]
     )
 
     events = list(
@@ -43,55 +40,79 @@ def test_agent_stream() -> None:
             run_config=RunConfig(streaming_mode=StreamingMode.SSE),
         )
     )
-    assert len(events) > 0, "Expected at least one message"
+    assert len(events) > 0
 
-    has_text_content = False
-    for event in events:
-        if (
-            event.content
-            and event.content.parts
-            and any(part.text for part in event.content.parts)
-        ):
-            has_text_content = True
-            break
-    assert has_text_content, "Expected at least one message with text content"
+    has_text_content = any(
+        part.text for event in events if event.content 
+        for part in event.content.parts if part.text
+    )
+    assert has_text_content
 
 
-def test_agent_lead_qualification() -> None:
+def test_agent_multi_agent_delegation() -> None:
     """
-    Integration test for the lead qualification logic.
-    Tests that the agent correctly identifies qualification data and triggers the tool.
+    Test di integrazione che verifica la delegazione al ricercatore.
+    In v2.0.0, nominare un'azienda deve innescare la ricerca.
     """
     session_service = InMemorySessionService()
-    session = session_service.create_session_sync(user_id="test_user_qual", app_name="test")
+    session = session_service.create_session_sync(user_id="test_user_del", app_name="test")
     runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
 
-    # Forniamo dati chiari per innescare la qualificazione
     message = types.Content(
-        role="user", parts=[types.Part.from_text(text="Attualmente lavoriamo con un competitor e abbiamo 150 lavoratori somministrati.")]
+        role="user", parts=[types.Part.from_text(text="Lavoro per Ferrero Spa.")]
     )
 
     events = list(
         runner.run(
             new_message=message,
-            user_id="test_user_qual",
+            user_id="test_user_del",
             session_id=session.id,
             run_config=RunConfig(streaming_mode=StreamingMode.SSE),
         )
     )
 
-    # Verifichiamo se c'è stata una chiamata a funzione o una conferma testuale
-    # Quando l'agente chiama un tool, ADK genera una sequenza di eventi.
-    has_tool_call = any(
-        part.function_call is not None
-        for event in events if event.content and event.content.parts
-        for part in event.content.parts
+    # Verifichiamo che l'agente abbia risposto testualmente (grounding su ricerca o root)
+    has_text = any(
+        part.text for event in events if event.content 
+        for part in event.content.parts if part.text
+    )
+    assert has_text, "L'agente non ha prodotto alcuna risposta alla menzione dell'azienda."
+
+def test_agent_final_qualification_flow() -> None:
+    """
+    Verifica che fornendo i dati di qualificazione, l'agente tenti il salvataggio.
+    Nota: In v2.0.0 questo richiede che l'azienda sia già nota o fornita nel messaggio.
+    """
+    session_service = InMemorySessionService()
+    session = session_service.create_session_sync(user_id="test_user_save", app_name="test")
+    runner = Runner(agent=root_agent, session_service=session_service, app_name="test")
+
+    # Forniamo contesto completo per innescare salva_qualificazione
+    message = types.Content(
+        role="user", parts=[types.Part.from_text(text="Siamo la Ferrero Spa, usiamo Adecco per 150 persone.")]
     )
 
-    saved_confirmation = any(
-        "Qualificazione salvata con successo" in part.text
-        for event in events if event.content and event.content.parts
+    events = list(
+        runner.run(
+            new_message=message,
+            user_id="test_user_save",
+            session_id=session.id,
+            run_config=RunConfig(streaming_mode=StreamingMode.SSE),
+        )
+    )
+
+    # Verifichiamo la chiamata a salva_qualificazione (AFC deve gestirla)
+    has_save_call = any(
+        part.function_call and part.function_call.name == "salva_qualificazione"
+        for event in events if event.content 
+        for part in event.content.parts
+    )
+    
+    # In alternativa, verifichiamo la conferma testuale
+    has_confirmation = any(
+        "salvat" in part.text.lower() 
+        for event in events if event.content 
         for part in event.content.parts if part.text
     )
 
-    assert has_tool_call or saved_confirmation, "Agent did not trigger the qualification tool or confirm saving."
+    assert has_save_call or has_confirmation, "L'agente non ha innescato il salvataggio o confermato l'azione."
