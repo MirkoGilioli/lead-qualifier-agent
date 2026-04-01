@@ -18,15 +18,20 @@ Include il setup della telemetria, l'esposizione degli endpoint e il logging su 
 """
 
 import os
+import logging
 
 import google.auth
 from fastapi import FastAPI
 from google.adk.cli.fast_api import get_fast_api_app
 from google.cloud import logging as google_cloud_logging
+from google.cloud.logging.handlers import CloudLoggingHandler
 
 from app.app_utils.telemetry import setup_telemetry
 from app.app_utils.typing import Feedback
 from app.app_utils.config import config
+
+# Configura il logging di base prima di qualsiasi chiamata
+logging.basicConfig(level=logging.INFO)
 
 logs_bucket_name = setup_telemetry()
 if logs_bucket_name:
@@ -37,20 +42,21 @@ else:
 _, project_id = google.auth.default()
 logging_client = google_cloud_logging.Client(project=project_id)
 
-# Configura il logging di Python per inviare i log a Cloud Logging
-from google.cloud.logging.handlers import CloudLoggingHandler
+# Configura il logging di Python per inviare i log a Cloud Logging tramite la libreria standard
 handler = CloudLoggingHandler(logging_client, name="randstad-adk-logs")
 logging.getLogger().addHandler(handler)
 logging.getLogger().setLevel(logging.INFO)
 
 logging.info(f"Cloud Logging integration started for project: {project_id}")
 
-logger = logging_client.logger(__name__)
+logger = logging.getLogger(__name__)
 allow_origins = (
     os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else None
 )
 
 # Artifact bucket for ADK (created by Terraform, passed via env var)
+# Note: logs_bucket_name is already set by setup_telemetry() above, 
+# but we re-read it here to ensure it's available for artifact_service_uri
 logs_bucket_name = os.environ.get("LOGS_BUCKET_NAME")
 
 AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
