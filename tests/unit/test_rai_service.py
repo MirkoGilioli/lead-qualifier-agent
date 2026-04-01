@@ -81,10 +81,12 @@ async def test_after_model_callback_with_violation(plugin, mock_ctx):
         
         # Verify logging
         mock_logger.warning.assert_called()
-        log_msg = mock_logger.warning.call_args[0][0]
-        assert "[RAI_TRIGGERED]" in log_msg
-        assert "Toxic (90.00%)" in log_msg
-        assert "Bad response" in log_msg
+        log_data = mock_logger.warning.call_args[0][0]
+        assert isinstance(log_data, dict)
+        assert log_data["event"] == "rai_response_blocked"
+        assert "[RAI_BLOCK_ALERT]" in log_data["message"]
+        assert "Toxic (90.00%)" in log_data["message"]
+        assert "Bad response" in log_data["text"]
         
         # Verify span attributes
         mock_span.set_attribute.assert_any_call("rai.blocked", True)
@@ -121,10 +123,12 @@ async def test_on_user_message_callback_with_violation(plugin, mock_ctx):
         
         # Verify logging
         mock_logger.warning.assert_called()
-        log_msg = mock_logger.warning.call_args[0][0]
-        assert "[RAI_TRIGGERED]" in log_msg
-        assert "Insult (80.00%)" in log_msg
-        assert "Bad prompt" in log_msg
+        log_data = mock_logger.warning.call_args[0][0]
+        assert isinstance(log_data, dict)
+        assert log_data["event"] == "rai_input_blocked"
+        assert "[RAI_BLOCK_ALERT]" in log_data["message"]
+        assert "Insult (80.00%)" in log_data["message"]
+        assert "Bad prompt" in log_data["text"]
         
         # Verify span attributes
         mock_span.set_attribute.assert_any_call("rai.blocked", True)
