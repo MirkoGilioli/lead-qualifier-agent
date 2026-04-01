@@ -28,7 +28,12 @@ from app.app_utils.telemetry import setup_telemetry
 from app.app_utils.typing import Feedback
 from app.app_utils.config import config
 
-setup_telemetry()
+logs_bucket_name = setup_telemetry()
+if logs_bucket_name:
+    logging.info(f"Prompt-response logging enabled to GCS bucket: {logs_bucket_name}")
+else:
+    logging.info("Prompt-response logging to GCS is disabled (LOGS_BUCKET_NAME not set).")
+
 _, project_id = google.auth.default()
 logging_client = google_cloud_logging.Client(project=project_id)
 
@@ -79,7 +84,7 @@ def collect_feedback(feedback: Feedback) -> dict[str, str]:
     Returns:
         Success message
     """
-    logger.log_struct(feedback.model_dump(), severity="INFO")
+    logger.info(feedback.model_dump())
     return {"status": "success"}
 
 

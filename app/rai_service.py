@@ -19,11 +19,9 @@ Configured via environment-specific YAML files.
 
 import logging
 import json
-import google.auth
 from typing import Optional, TYPE_CHECKING
 
 from google.cloud import language_v1
-from google.cloud import logging as cloud_logging
 from google.adk.plugins.base_plugin import BasePlugin
 from google.adk.models.llm_response import LlmResponse
 from google.adk.agents.callback_context import CallbackContext
@@ -38,14 +36,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
-
-# Configurazione client Cloud Logging diretto per massima affidabilità
-try:
-    _, project_id = google.auth.default()
-    cl_client = cloud_logging.Client(project=project_id)
-    cl_logger = cl_client.logger("rai_moderation_alerts")
-except Exception:
-    cl_logger = None
 
 # Categorie aggiuntive per una protezione più robusta
 DEFAULT_SENSITIVE_CATEGORIES = [
@@ -125,19 +115,15 @@ class ResponsibleAIPlugin(BasePlugin):
                 cat_str = ", ".join([f"{c['category']} ({c['confidence']:.2%})" for c in triggered_categories])
                 msg = f"[RAI_BLOCK_ALERT] Input blocked. Categories: {cat_str}. Prompt: {text_to_moderate}"
                 
-                # Log locale (terminale)
-                logger.warning(msg)
+                # Invia log strutturato tramite il sistema di logging standard
+                logger.warning({
+                    "event": "rai_input_blocked",
+                    "text": text_to_moderate,
+                    "categories": triggered_categories,
+                    "message": msg
+                })
                 
-                # Log diretto su Cloud Logging (bypassando i filtri locali)
-                if cl_logger:
-                    cl_logger.log_struct({
-                        "event": "rai_input_blocked",
-                        "text": text_to_moderate,
-                        "categories": triggered_categories,
-                        "message": msg
-                    }, severity="WARNING")
-                
-                # Aggiungiamo attributi allo span corrente
+                # Aggiungiamo attributi allo span corrente per Cloud Trace
                 current_span = trace.get_current_span()
                 current_span.set_attribute("rai.blocked", True)
                 current_span.set_attribute("rai.type", "input")
@@ -216,19 +202,15 @@ class ResponsibleAIPlugin(BasePlugin):
                 cat_str = ", ".join([f"{c['category']} ({c['confidence']:.2%})" for c in triggered_categories])
                 msg = f"[RAI_BLOCK_ALERT] Response blocked. Categories: {cat_str}. Output: {text_to_moderate}"
                 
-                # Log locale (terminale)
-                logger.warning(msg)
+                # Invia log strutturato tramite il sistema di logging standard
+                logger.warning({
+                    "event": "rai_response_blocked",
+                    "text": text_to_moderate,
+                    "categories": triggered_categories,
+                    "message": msg
+                })
 
-                # Log diretto su Cloud Logging
-                if cl_logger:
-                    cl_logger.log_struct({
-                        "event": "rai_response_blocked",
-                        "text": text_to_moderate,
-                        "categories": triggered_categories,
-                        "message": msg
-                    }, severity="WARNING")
-
-                # Aggiungiamo attributi allo span corrente
+                # Aggiungiamo attributi allo span corrente per Cloud Trace
                 current_span = trace.get_current_span()
                 current_span.set_attribute("rai.blocked", True)
                 current_span.set_attribute("rai.type", "output")
