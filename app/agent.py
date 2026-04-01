@@ -75,4 +75,5 @@ app = App(
     root_agent=root_agent,
     name=config.get("app.name", "app"),
     plugins=[ResponsibleAIPlugin()],
+    otel_to_cloud=True,
 )

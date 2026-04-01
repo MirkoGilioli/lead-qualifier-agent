@@ -18,13 +18,17 @@ Configured via environment-specific YAML files.
 """
 
 import logging
+import json
+import google.auth
 from typing import Optional, TYPE_CHECKING
 
 from google.cloud import language_v1
+from google.cloud import logging as cloud_logging
 from google.adk.plugins.base_plugin import BasePlugin
 from google.adk.models.llm_response import LlmResponse
 from google.adk.agents.callback_context import CallbackContext
 from google.genai import types
+from opentelemetry import trace
 
 from .app_utils.config import config
 
@@ -33,6 +37,15 @@ if TYPE_CHECKING:
     from google.adk.agents.base_agent import BaseAgent
 
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
+
+# Configurazione client Cloud Logging diretto per massima affidabilità
+try:
+    _, project_id = google.auth.default()
+    cl_client = cloud_logging.Client(project=project_id)
+    cl_logger = cl_client.logger("rai_moderation_alerts")
+except Exception:
+    cl_logger = None
 
 # Categorie aggiuntive per una protezione più robusta
 DEFAULT_SENSITIVE_CATEGORIES = [
@@ -94,14 +107,43 @@ class ResponsibleAIPlugin(BasePlugin):
             response = self.client.moderate_text(request={"document": document})
 
             blocked = False
+            triggered_categories = []
+            
+            # Log all scores for debugging purposes
+            debug_scores = [f"{c.name}: {c.confidence:.2%}" for c in response.moderation_categories if c.confidence > 0.1]
+            logger.info(f"RAI Input Debug - text: '{text_to_moderate[:50]}...', top categories: {', '.join(debug_scores)}")
+
             for category in response.moderation_categories:
                 if category.name in self.sensitive_categories and category.confidence > self.threshold:
                     blocked = True
-                    logger.warning(f"RAI Input Violation: {category.name} ({category.confidence:.2%})")
-                    break
+                    triggered_categories.append({
+                        "category": category.name,
+                        "confidence": float(category.confidence)
+                    })
 
             if blocked:
-                logger.warning(f"RAI Blocked input message: {text_to_moderate[:50]}...")
+                cat_str = ", ".join([f"{c['category']} ({c['confidence']:.2%})" for c in triggered_categories])
+                msg = f"[RAI_BLOCK_ALERT] Input blocked. Categories: {cat_str}. Prompt: {text_to_moderate}"
+                
+                # Log locale (terminale)
+                logger.warning(msg)
+                
+                # Log diretto su Cloud Logging (bypassando i filtri locali)
+                if cl_logger:
+                    cl_logger.log_struct({
+                        "event": "rai_input_blocked",
+                        "text": text_to_moderate,
+                        "categories": triggered_categories,
+                        "message": msg
+                    }, severity="WARNING")
+                
+                # Aggiungiamo attributi allo span corrente
+                current_span = trace.get_current_span()
+                current_span.set_attribute("rai.blocked", True)
+                current_span.set_attribute("rai.type", "input")
+                current_span.set_attribute("rai.categories", json.dumps(triggered_categories))
+                current_span.set_attribute("rai.input_text", text_to_moderate)
+
                 invocation_context.session.state["rai_input_blocked"] = True
                 return types.Content(
                     role="user",
@@ -165,12 +207,34 @@ class ResponsibleAIPlugin(BasePlugin):
             for category in response.moderation_categories:
                 if category.name in self.sensitive_categories and category.confidence > self.threshold:
                     blocked = True
-                    triggered_categories.append(f"{category.name} ({category.confidence:.2%})")
+                    triggered_categories.append({
+                        "category": category.name,
+                        "confidence": float(category.confidence)
+                    })
 
             if blocked:
-                logger.warning(
-                    f"RAI Blocked response. Categories triggered: {', '.join(triggered_categories)}"
-                )
+                cat_str = ", ".join([f"{c['category']} ({c['confidence']:.2%})" for c in triggered_categories])
+                msg = f"[RAI_BLOCK_ALERT] Response blocked. Categories: {cat_str}. Output: {text_to_moderate}"
+                
+                # Log locale (terminale)
+                logger.warning(msg)
+
+                # Log diretto su Cloud Logging
+                if cl_logger:
+                    cl_logger.log_struct({
+                        "event": "rai_response_blocked",
+                        "text": text_to_moderate,
+                        "categories": triggered_categories,
+                        "message": msg
+                    }, severity="WARNING")
+
+                # Aggiungiamo attributi allo span corrente
+                current_span = trace.get_current_span()
+                current_span.set_attribute("rai.blocked", True)
+                current_span.set_attribute("rai.type", "output")
+                current_span.set_attribute("rai.categories", json.dumps(triggered_categories))
+                current_span.set_attribute("rai.output_text", text_to_moderate)
+
                 new_content = types.Content(
                     role="model",
                     parts=[types.Part.from_text(text=self.fallback_message)]

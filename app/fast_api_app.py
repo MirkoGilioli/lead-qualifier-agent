@@ -30,7 +30,16 @@ from app.app_utils.config import config
 
 setup_telemetry()
 _, project_id = google.auth.default()
-logging_client = google_cloud_logging.Client()
+logging_client = google_cloud_logging.Client(project=project_id)
+
+# Configura il logging di Python per inviare i log a Cloud Logging
+from google.cloud.logging.handlers import CloudLoggingHandler
+handler = CloudLoggingHandler(logging_client, name="randstad-adk-logs")
+logging.getLogger().addHandler(handler)
+logging.getLogger().setLevel(logging.INFO)
+
+logging.info(f"Cloud Logging integration started for project: {project_id}")
+
 logger = logging_client.logger(__name__)
 allow_origins = (
     os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else None
