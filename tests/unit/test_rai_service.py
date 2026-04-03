@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import pytest
+import json
 from unittest.mock import MagicMock, patch
 from google.adk.models.llm_response import LlmResponse
 from google.genai import types
@@ -64,12 +65,39 @@ async def test_after_model_callback_with_violation(plugin, mock_ctx):
     mock_response.moderation_categories = [cat]
     plugin.client.moderate_text.return_value = mock_response
 
-    bad_content = types.Content(role="model", parts=[types.Part.from_text(text="Bad")])
+    bad_content = types.Content(role="model", parts=[types.Part.from_text(text="Bad response")])
     llm_response = LlmResponse(content=bad_content)
 
-    result = await plugin.after_model_callback(callback_context=mock_ctx, llm_response=llm_response)
-    assert result is not None
-    assert result.content.parts[0].text == "FALLBACK"
+    with patch("app.rai_service.logger") as mock_logger, \
+         patch("app.rai_service.trace.get_current_span") as mock_get_span:
+        
+        mock_span = MagicMock()
+        mock_get_span.return_value = mock_span
+        
+        result = await plugin.after_model_callback(callback_context=mock_ctx, llm_response=llm_response)
+        
+        assert result is not None
+        assert result.content.parts[0].text == "FALLBACK"
+        
+        # Verify logging
+        mock_logger.warning.assert_called()
+        log_data = mock_logger.warning.call_args[0][0]
+        assert isinstance(log_data, dict)
+        assert log_data["event"] == "rai_response_blocked"
+        assert "[RAI_BLOCK_ALERT]" in log_data["message"]
+        assert "Toxic (90.00%)" in log_data["message"]
+        assert "Bad response" in log_data["text"]
+        
+        # Verify span attributes
+        mock_span.set_attribute.assert_any_call("rai.blocked", True)
+        mock_span.set_attribute.assert_any_call("rai.type", "output")
+        
+        # Check categories attribute
+        calls = [call for call in mock_span.set_attribute.call_args_list if call[0][0] == "rai.categories"]
+        assert len(calls) == 1
+        categories = json.loads(calls[0][0][1])
+        assert categories[0]["category"] == "Toxic"
+        assert categories[0]["confidence"] == 0.9
 
 @pytest.mark.asyncio
 async def test_on_user_message_callback_with_violation(plugin, mock_ctx):
@@ -80,11 +108,32 @@ async def test_on_user_message_callback_with_violation(plugin, mock_ctx):
     mock_response.moderation_categories = [cat]
     plugin.client.moderate_text.return_value = mock_response
 
-    user_message = types.Content(role="user", parts=[types.Part.from_text(text="Bad")])
+    user_message = types.Content(role="user", parts=[types.Part.from_text(text="Bad prompt")])
 
-    result = await plugin.on_user_message_callback(invocation_context=mock_ctx, user_message=user_message)
-    assert result is not None
-    assert mock_ctx.session.state["rai_input_blocked"] is True
+    with patch("app.rai_service.logger") as mock_logger, \
+         patch("app.rai_service.trace.get_current_span") as mock_get_span:
+        
+        mock_span = MagicMock()
+        mock_get_span.return_value = mock_span
+        
+        result = await plugin.on_user_message_callback(invocation_context=mock_ctx, user_message=user_message)
+        
+        assert result is not None
+        assert mock_ctx.session.state["rai_input_blocked"] is True
+        
+        # Verify logging
+        mock_logger.warning.assert_called()
+        log_data = mock_logger.warning.call_args[0][0]
+        assert isinstance(log_data, dict)
+        assert log_data["event"] == "rai_input_blocked"
+        assert "[RAI_BLOCK_ALERT]" in log_data["message"]
+        assert "Insult (80.00%)" in log_data["message"]
+        assert "Bad prompt" in log_data["text"]
+        
+        # Verify span attributes
+        mock_span.set_attribute.assert_any_call("rai.blocked", True)
+        mock_span.set_attribute.assert_any_call("rai.type", "input")
+        mock_span.set_attribute.assert_any_call("rai.input_text", "Bad prompt")
 
 @pytest.mark.asyncio
 async def test_before_agent_callback_blocking(plugin, mock_ctx):
