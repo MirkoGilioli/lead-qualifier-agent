@@ -20,3 +20,12 @@ resource "google_firestore_database" "database" {
 
   depends_on = [google_project_service.services]
 }
+
+resource "google_firestore_database" "session_database" {
+  project     = var.project_id
+  name        = "session-state-db-${var.env}"
+  location_id = var.region
+  type        = "FIRESTORE_NATIVE"
+
+  depends_on = [google_project_service.services]
+}

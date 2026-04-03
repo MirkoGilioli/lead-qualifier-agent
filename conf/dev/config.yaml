@@ -4,6 +4,13 @@ app:
 fastapi:
   enable_web_ui: true
 
+sessions:
+  database_id: "session-state-db-dev"
+  collection: "chat_sessions"
+
+leads:
+  database_id: "lead-qualifier-db-dev"
+
 env:
   GOOGLE_CLOUD_LOCATION: "global"
   GOOGLE_GENAI_USE_VERTEXAI: "True"
