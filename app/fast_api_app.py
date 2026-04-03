@@ -57,21 +57,30 @@ google.adk.cli.fast_api.create_session_service_from_options = custom_session_fac
 
 from google.adk.cli.fast_api import get_fast_api_app
 
-# Configura il logging di base prima di qualsiasi chiamata
-logging.basicConfig(level=logging.INFO)
-
 logs_bucket_name = setup_telemetry()
 _, project_id = google.auth.default()
 
-# Cloud Logging attivo solo se NON siamo in locale (dev)
-if os.getenv("APP_ENV", "dev") != "dev":
+# Attiva Cloud Logging se siamo in Cloud Run (K_SERVICE è impostata da GCP)
+if os.getenv("K_SERVICE"):
     try:
         logging_client = google_cloud_logging.Client(project=project_id)
         handler = CloudLoggingHandler(logging_client, name="randstad-adk-logs")
-        logging.getLogger().addHandler(handler)
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.INFO)
+        root_logger.addHandler(handler)
         logging.info(f"Cloud Logging integration started for project: {project_id}")
     except Exception as e:
-        logging.warning(f"Cloud Logging failed to initialize: {e}")
+        # Fallback su logging standard se il client fallisce
+        logging.basicConfig(level=logging.INFO, force=True)
+        logging.warning(f"Cloud Logging failed to initialize, using standard logging: {e}")
+else:
+    # Configurazione per il locale - USIAMO FORCE=TRUE per garantire l'output
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(levelname)s:%(name)s:%(message)s',
+        force=True
+    )
+    logging.info("Running in local mode, using standard logging (force=True)")
 
 logger = logging.getLogger(__name__)
 allow_origins = (
