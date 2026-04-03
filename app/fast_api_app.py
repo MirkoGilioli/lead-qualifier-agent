@@ -44,7 +44,7 @@ def custom_session_factory(base_dir, session_service_uri=None, **kwargs):
             collection_name=col
         )
     from google.adk.cli.utils.service_factory import create_session_service_from_options as original_factory
-    return original_factory(base_dir, session_service_uri, **kwargs)
+    return original_factory(base_dir=base_dir, session_service_uri=session_service_uri, **kwargs)
 
 # Sovrascriviamo il riferimento nel modulo fast_api dell'ADK
 google.adk.cli.fast_api.create_session_service_from_options = custom_session_factory
