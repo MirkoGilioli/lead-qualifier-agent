@@ -33,16 +33,22 @@ from app.app_utils.firestore_session_service import FirestoreSessionService
 import google.adk.cli.fast_api
 
 # Monkey patch diretto nel modulo dove viene usata la funzione
-def custom_session_factory(base_dir, session_service_uri=None, **kwargs):
+def custom_session_factory(*, base_dir, session_service_uri=None, **kwargs):
     if session_service_uri and session_service_uri.startswith("firestore://"):
         db_id = config.get("sessions.database_id")
         col = config.get("sessions.collection", "chat_sessions")
+        # Recuperiamo il project_id corrente
         _, project_id_local = google.auth.default()
+        
+        # Logging per conferma in Cloud Run
+        logging.info(f"Custom Factory: scheme firestore detected. Using DB: {db_id} in Project: {project_id_local}")
+        
         return FirestoreSessionService(
             project_id=project_id_local,
             database_id=db_id,
             collection_name=col
         )
+    
     from google.adk.cli.utils.service_factory import create_session_service_from_options as original_factory
     return original_factory(base_dir=base_dir, session_service_uri=session_service_uri, **kwargs)
 
