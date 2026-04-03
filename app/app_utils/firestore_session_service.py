@@ -29,6 +29,11 @@ from google.adk.sessions.session import Session
 tracer = trace.get_tracer(__name__)
 
 
+import logging
+
+# Configurazione logger
+logger = logging.getLogger(__name__)
+
 class FirestoreSessionService(BaseSessionService):
     """Custom Session Service using Google Cloud Firestore."""
 
@@ -41,6 +46,7 @@ class FirestoreSessionService(BaseSessionService):
         """Initializes the Firestore session service."""
         self.client = firestore.AsyncClient(project=project_id, database=database_id)
         self.collection_name = collection_name
+        logger.info(f"FirestoreSessionService initialized for project {project_id}, database {database_id}, collection {collection_name}")
 
     def _tag_span_with_session(self, session_id: str):
         """Helper to tag the current OTel span with the session ID."""
@@ -58,6 +64,7 @@ class FirestoreSessionService(BaseSessionService):
     ) -> Session:
         """Creates a new session in Firestore."""
         sid = session_id or str(uuid.uuid4())
+        logger.info(f"FirestoreSessionService: Creating session {sid} for user {user_id}")
         self._tag_span_with_session(sid)
         
         session = Session(
@@ -68,8 +75,14 @@ class FirestoreSessionService(BaseSessionService):
             last_update_time=time.time(),
         )
         
-        doc_ref = self.client.collection(self.collection_name).document(sid)
-        await doc_ref.set(session.model_dump(by_alias=True))
+        try:
+            doc_ref = self.client.collection(self.collection_name).document(sid)
+            await doc_ref.set(session.model_dump(by_alias=True))
+            logger.info(f"FirestoreSessionService: Session {sid} successfully saved to Firestore")
+        except Exception as e:
+            logger.error(f"FirestoreSessionService: ERROR saving session {sid}: {e}")
+            raise e
+            
         return session
 
     async def get_session(
@@ -81,19 +94,27 @@ class FirestoreSessionService(BaseSessionService):
         config: Optional[GetSessionConfig] = None,
     ) -> Optional[Session]:
         """Gets a session from Firestore."""
+        logger.info(f"FirestoreSessionService: Retrieving session {session_id}")
         self._tag_span_with_session(session_id)
         
-        doc_ref = self.client.collection(self.collection_name).document(session_id)
-        doc = await doc_ref.get()
-        
-        if not doc.exists:
-            return None
+        try:
+            doc_ref = self.client.collection(self.collection_name).document(session_id)
+            doc = await doc_ref.get()
             
-        data = doc.to_dict()
-        if data.get("appName") != app_name or data.get("userId") != user_id:
+            if not doc.exists:
+                logger.warning(f"FirestoreSessionService: Session {session_id} NOT FOUND")
+                return None
+                
+            data = doc.to_dict()
+            if data.get("appName") != app_name or data.get("userId") != user_id:
+                logger.warning(f"FirestoreSessionService: Session {session_id} found but metadata mismatch (app/user)")
+                return None
+                
+            logger.info(f"FirestoreSessionService: Session {session_id} successfully retrieved")
+            return Session.model_validate(data)
+        except Exception as e:
+            logger.error(f"FirestoreSessionService: ERROR retrieving session {session_id}: {e}")
             return None
-            
-        return Session.model_validate(data)
 
     async def list_sessions(
         self, *, app_name: str, user_id: Optional[str] = None

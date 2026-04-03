@@ -84,8 +84,8 @@ allow_origins = (
 logs_bucket_name = os.environ.get("LOGS_BUCKET_NAME")
 
 AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Firestore session configuration from config.yaml
-session_db_id = config.get("sessions.database_id")
+# Firestore session configuration: prioritize env var over config.yaml
+session_db_id = os.environ.get("SESSION_DATABASE_ID") or config.get("sessions.database_id")
 session_collection = config.get("sessions.collection", "chat_sessions")
 
 # Costruiamo un URI che il nostro factory personalizzato intercetterà
