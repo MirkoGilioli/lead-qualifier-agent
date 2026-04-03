@@ -13,21 +13,20 @@
 # limitations under the License.
 
 # 1. Definizione della Log-based Metric (Distribuzione della Latenza)
-# Questa risorsa crea una metrica numerica estraendo il valore dai log dell'app.
 resource "google_logging_metric" "agent_run_latency_metric" {
   name    = "agent_run_latency_${var.env}"
   project = var.project_id
-  filter  = "textPayload:\"SRE_METRIC: agent_run_duration_ms=\""
+  filter  = "jsonPayload.event=\"sre_metric\" AND jsonPayload.metric_name=\"agent_run_duration_ms\""
 
   metric_descriptor {
     metric_kind = "DELTA"
     value_type  = "DISTRIBUTION"
     unit        = "ms"
-    display_name = "Agent Run Latency (Log-based) - ${var.env}"
+    display_name = "Agent Run Latency (JSON-based) - ${var.env}"
   }
 
-  # Estrae il valore decimale dal log: SRE_METRIC: agent_run_duration_ms=123.45
-  value_extractor = "REGEXP_EXTRACT(textPayload, \"agent_run_duration_ms=([0-9.]+)\")"
+  # Estrae direttamente il valore dal campo JSON 'value'
+  value_extractor = "EXTRACT(jsonPayload.value)"
 
   bucket_options {
     exponential_buckets {
