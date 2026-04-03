@@ -60,3 +60,15 @@ variable "app_sa_roles" {
     "roles/automl.predictor",
   ]
 }
+
+variable "slo_latency_threshold_ms" {
+  type        = number
+  description = "Latenza massima accettabile per lo span agent_run (in millisecondi)"
+  default     = 10000
+}
+
+variable "slo_target_percent" {
+  type        = number
+  description = "Percentuale target di SLO (es. 0.95 per 95%)"
+  default     = 0.95
+}

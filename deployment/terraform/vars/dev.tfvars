@@ -9,3 +9,7 @@ project_id = "qwiklabs-asl-03-46a033ad38bd"
 
 # The Google Cloud region you will use to deploy the infrastructure
 region = "us-central1"
+
+# SRE Logic: SLO latency target and threshold
+slo_latency_threshold_ms = 15000
+slo_target_percent       = 0.90

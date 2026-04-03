@@ -19,19 +19,52 @@ Qui viene definito l'agente principale (Root Agent) e orchestrata la delegazione
 """
 
 import os
+import time
+import logging
 import google.auth
 
 from google.adk.agents import Agent
+from google.adk.agents.callback_context import CallbackContext
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.adk.tools import AgentTool
 from google.genai import types
+from opentelemetry import trace
 
 from .tools import salva_qualificazione
 from .prompts import INSTRUCTION
 from .agents.researcher import ricercatore_azienda
 from .app_utils.config import config
 from .rai_service import ResponsibleAIPlugin
+
+logger = logging.getLogger(__name__)
+
+# Callback per misurare la latenza (SRE Logic)
+async def track_start_time(callback_context: CallbackContext) -> None:
+    callback_context.state["_sre_start_time"] = time.time()
+    # Aggiungiamo un attributo allo span iniziale
+    current_span = trace.get_current_span()
+    current_span.set_attribute("sre.start_time", time.time())
+
+async def log_sre_metrics(callback_context: CallbackContext) -> None:
+    start_time = callback_context.state.get("_sre_start_time")
+    if start_time:
+        duration_ms = (time.time() - start_time) * 1000
+        
+        # 1. Log Strutturato (Stile RAI/NLP)
+        # Questo verrà catturato da Cloud Run e trasformato in jsonPayload
+        logger.info({
+            "message": f"SRE_METRIC: agent_run_duration_ms={duration_ms:.2f}",
+            "event": "sre_metric",
+            "metric_name": "agent_run_duration_ms",
+            "value": float(f"{duration_ms:.2f}"),
+            "unit": "ms"
+        })
+
+        # 2. Integrazione Cloud Trace (Stile RAI/NLP)
+        current_span = trace.get_current_span()
+        current_span.set_attribute("sre.agent_run_duration_ms", duration_ms)
+        current_span.set_attribute("sre.status", "success")
 
 # Configurazione ambiente GCP
 _, project_id = google.auth.default()
@@ -69,6 +102,8 @@ root_agent = Agent(
         salva_qualificazione,
         AgentTool(ricercatore_azienda) # Delegazione modulare
     ],
+    before_agent_callback=track_start_time,
+    after_agent_callback=log_sre_metrics,
 )
 
 app = App(
