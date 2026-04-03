@@ -14,38 +14,40 @@
 
 import logging
 import os
+from app.app_utils.config import config
 
 
 def setup_telemetry() -> str | None:
-    """Configure OpenTelemetry and GenAI telemetry with GCS upload."""
+    """Configure OpenTelemetry and GenAI telemetry with GCS upload using config file."""
 
-    bucket = os.environ.get("LOGS_BUCKET_NAME")
-    capture_content = os.environ.get(
-        "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT", "false"
-    )
-    if bucket and capture_content != "false":
+    telemetry_config = config.get("telemetry", {})
+    enabled = telemetry_config.get("enabled", False)
+    bucket = telemetry_config.get("bucket")
+
+    if enabled and bucket:
+        capture_content = telemetry_config.get("capture_content", "NO_CONTENT")
         logging.info(
-            "Prompt-response logging enabled - mode: NO_CONTENT (metadata only, no prompts/responses)"
+            f"Prompt-response logging enabled - mode: {capture_content} (uploading to gs://{bucket})"
         )
-        os.environ["OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT"] = "NO_CONTENT"
-        os.environ.setdefault("OTEL_INSTRUMENTATION_GENAI_UPLOAD_FORMAT", "jsonl")
-        os.environ.setdefault("OTEL_INSTRUMENTATION_GENAI_COMPLETION_HOOK", "upload")
-        os.environ.setdefault(
-            "OTEL_SEMCONV_STABILITY_OPT_IN", "gen_ai_latest_experimental"
-        )
+        
+        # Impostiamo le variabili d'ambiente richieste dalla strumentazione GenAI
+        os.environ["OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT"] = capture_content
+        os.environ["OTEL_INSTRUMENTATION_GENAI_UPLOAD_FORMAT"] = telemetry_config.get("format", "jsonl")
+        os.environ["OTEL_INSTRUMENTATION_GENAI_COMPLETION_HOOK"] = telemetry_config.get("hook", "upload")
+        os.environ["OTEL_SEMCONV_STABILITY_OPT_IN"] = telemetry_config.get("stability_opt_in", "gen_ai_latest_experimental")
+        
+        # Percorso di upload
+        path = telemetry_config.get("path", "completions")
+        os.environ["OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH"] = f"gs://{bucket}/{path}"
+        
+        # Resource Attributes (Namespace e Versione)
+        namespace = telemetry_config.get("resource_namespace", "randstad-adk")
         commit_sha = os.environ.get("COMMIT_SHA", "dev")
-        os.environ.setdefault(
-            "OTEL_RESOURCE_ATTRIBUTES",
-            f"service.namespace=randstad-adk,service.version={commit_sha}",
-        )
-        path = os.environ.get("GENAI_TELEMETRY_PATH", "completions")
-        os.environ.setdefault(
-            "OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH",
-            f"gs://{bucket}/{path}",
-        )
+        os.environ["OTEL_RESOURCE_ATTRIBUTES"] = f"service.namespace={namespace},service.version={commit_sha}"
+        
     else:
         logging.info(
-            "Prompt-response logging disabled (set LOGS_BUCKET_NAME=gs://your-bucket and OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT to enable)"
+            "Prompt-response logging disabled (check 'telemetry' section in config.yaml)"
         )
 
     return bucket

@@ -11,6 +11,16 @@ sessions:
 leads:
   database_id: "lead-qualifier-db-staging"
 
+telemetry:
+  enabled: true
+  bucket: "qwiklabs-asl-03-46a033ad38bd-randstad-adk-staging-logs"
+  capture_content: "NO_CONTENT"
+  path: "completions"
+  format: "jsonl"
+  hook: "upload"
+  stability_opt_in: "gen_ai_latest_experimental"
+  resource_namespace: "randstad-adk-staging"
+
 env:
   GOOGLE_CLOUD_LOCATION: "global"
   GOOGLE_GENAI_USE_VERTEXAI: "True"
