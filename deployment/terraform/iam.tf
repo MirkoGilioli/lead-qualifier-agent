@@ -53,6 +53,7 @@ locals {
     "roles/resourcemanager.projectIamAdmin",
     "roles/aiplatform.user",
     "roles/automl.predictor",
+    "roles/datastore.user",
   ]
 }
 
